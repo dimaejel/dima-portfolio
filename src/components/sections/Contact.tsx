@@ -25,8 +25,13 @@ export function Contact() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = async (data: FormData) => {
-    await new Promise((r) => setTimeout(r, 1100));
-    console.log("Contact form:", data);
+    const { supabase } = await import("@/integrations/supabase/client");
+    const { error } = await supabase.from("contact_messages").insert(data);
+    if (error) {
+      const { toast } = await import("sonner");
+      toast.error(error.message);
+      return;
+    }
     setSent(true);
     reset();
     setTimeout(() => setSent(false), 4000);

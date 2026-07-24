@@ -14,16 +14,405 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      achievements: {
+        Row: {
+          category: string
+          created_at: string
+          display_order: number
+          icon: string
+          id: string
+          items: string[]
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          items?: string[]
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          items?: string[]
+          updated_at?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      certifications: {
+        Row: {
+          created_at: string
+          date: string
+          display_order: number
+          gradient: string | null
+          id: string
+          issuer: string
+          link: string | null
+          title: string
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          display_order?: number
+          gradient?: string | null
+          id?: string
+          issuer?: string
+          link?: string | null
+          title: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          display_order?: number
+          gradient?: string | null
+          id?: string
+          issuer?: string
+          link?: string | null
+          title?: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          read: boolean
+          subject: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          read?: boolean
+          subject: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          read?: boolean
+          subject?: string
+        }
+        Relationships: []
+      }
+      education: {
+        Row: {
+          courses: string[]
+          created_at: string
+          degree: string
+          description: string | null
+          display_order: number
+          gpa: string | null
+          id: string
+          institution: string
+          period: string
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          courses?: string[]
+          created_at?: string
+          degree: string
+          description?: string | null
+          display_order?: number
+          gpa?: string | null
+          id?: string
+          institution: string
+          period?: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          courses?: string[]
+          created_at?: string
+          degree?: string
+          description?: string | null
+          display_order?: number
+          gpa?: string | null
+          id?: string
+          institution?: string
+          period?: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      experience: {
+        Row: {
+          bullets: string[]
+          company: string
+          created_at: string
+          display_order: number
+          id: string
+          is_current: boolean
+          period: string
+          role: string
+          type: string
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          bullets?: string[]
+          company: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_current?: boolean
+          period?: string
+          role: string
+          type?: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          bullets?: string[]
+          company?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_current?: boolean
+          period?: string
+          role?: string
+          type?: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          category: string
+          created_at: string
+          demo_url: string | null
+          description: string
+          display_order: number
+          featured: boolean
+          github_url: string | null
+          gradient: string | null
+          id: string
+          image_url: string | null
+          tech_stack: string[]
+          title: string
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          demo_url?: string | null
+          description?: string
+          display_order?: number
+          featured?: boolean
+          github_url?: string | null
+          gradient?: string | null
+          id?: string
+          image_url?: string | null
+          tech_stack?: string[]
+          title: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          demo_url?: string | null
+          description?: string
+          display_order?: number
+          featured?: boolean
+          github_url?: string | null
+          gradient?: string | null
+          id?: string
+          image_url?: string | null
+          tech_stack?: string[]
+          title?: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      site_profile: {
+        Row: {
+          availability_status: string
+          avatar_url: string | null
+          bio: string
+          email: string
+          github_handle: string | null
+          github_url: string | null
+          id: number
+          initials: string
+          interests: string[]
+          linkedin_handle: string | null
+          linkedin_url: string | null
+          location: string
+          name: string
+          phone: string | null
+          resume_url: string | null
+          roles: string[]
+          stats: Json
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          availability_status?: string
+          avatar_url?: string | null
+          bio?: string
+          email?: string
+          github_handle?: string | null
+          github_url?: string | null
+          id?: number
+          initials?: string
+          interests?: string[]
+          linkedin_handle?: string | null
+          linkedin_url?: string | null
+          location?: string
+          name?: string
+          phone?: string | null
+          resume_url?: string | null
+          roles?: string[]
+          stats?: Json
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          availability_status?: string
+          avatar_url?: string | null
+          bio?: string
+          email?: string
+          github_handle?: string | null
+          github_url?: string | null
+          id?: number
+          initials?: string
+          interests?: string[]
+          linkedin_handle?: string | null
+          linkedin_url?: string | null
+          location?: string
+          name?: string
+          phone?: string | null
+          resume_url?: string | null
+          roles?: string[]
+          stats?: Json
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      skills: {
+        Row: {
+          badge: string
+          category: string
+          color: string
+          created_at: string
+          display_order: number
+          id: string
+          name: string
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          badge?: string
+          category: string
+          color?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          name: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          badge?: string
+          category?: string
+          color?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          name?: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +539,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const

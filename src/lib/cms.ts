@@ -1,0 +1,71 @@
+import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
+
+export type SiteProfile = Tables<"site_profile">;
+export type Project = Tables<"projects">;
+export type Skill = Tables<"skills">;
+export type Experience = Tables<"experience">;
+export type Education = Tables<"education">;
+export type Certification = Tables<"certifications">;
+export type Achievement = Tables<"achievements">;
+export type ContactMessage = Tables<"contact_messages">;
+
+export const qk = {
+  siteProfile: ["site_profile"] as const,
+  projects: ["projects"] as const,
+  projectsAll: ["projects", "all"] as const,
+  skills: ["skills"] as const,
+  skillsAll: ["skills", "all"] as const,
+  experience: ["experience"] as const,
+  experienceAll: ["experience", "all"] as const,
+  education: ["education"] as const,
+  educationAll: ["education", "all"] as const,
+  certifications: ["certifications"] as const,
+  certificationsAll: ["certifications", "all"] as const,
+  achievements: ["achievements"] as const,
+  achievementsAll: ["achievements", "all"] as const,
+  messages: ["contact_messages"] as const,
+  stats: ["admin", "stats"] as const,
+};
+
+export async function fetchSiteProfile(): Promise<SiteProfile | null> {
+  const { data, error } = await supabase.from("site_profile").select("*").eq("id", 1).maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+async function list<T>(table: string, visibleOnly = true): Promise<T[]> {
+  let q = supabase.from(table as never).select("*").order("display_order", { ascending: true });
+  if (visibleOnly) q = q.eq("visible", true);
+  const { data, error } = await q;
+  if (error) throw error;
+  return (data ?? []) as T[];
+}
+
+export const fetchProjects = (all = false) => list<Project>("projects", !all);
+export const fetchSkills = (all = false) => list<Skill>("skills", !all);
+export const fetchExperience = (all = false) => list<Experience>("experience", !all);
+export const fetchEducation = (all = false) => list<Education>("education", !all);
+export const fetchCertifications = (all = false) => list<Certification>("certifications", !all);
+export const fetchAchievements = (all = false) => list<Achievement>("achievements", !all);
+
+export async function fetchMessages(): Promise<ContactMessage[]> {
+  const { data, error } = await supabase
+    .from("contact_messages")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function uploadMedia(file: File, folder: string): Promise<string> {
+  const ext = file.name.split(".").pop() ?? "bin";
+  const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const { error } = await supabase.storage.from("site-media").upload(path, file, {
+    upsert: false,
+    contentType: file.type,
+  });
+  if (error) throw error;
+  const { data } = supabase.storage.from("site-media").getPublicUrl(path);
+  return data.publicUrl;
+}

@@ -133,7 +133,7 @@ function AdminSidebar({ userEmail }: { userEmail: string }) {
               {nav.map((item) => (
                 <SidebarMenuItem key={item.to}>
                   <SidebarMenuButton asChild isActive={isActive(item.to, item.exact)}>
-                    <Link to={item.to} className="flex items-center gap-2">
+                    <Link to={item.to as string} className="flex items-center gap-2">
                       <item.icon className="h-4 w-4" />
                       <span>{item.label}</span>
                     </Link>

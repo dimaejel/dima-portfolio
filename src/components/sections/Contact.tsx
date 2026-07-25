@@ -62,36 +62,17 @@ export function Contact() {
           </p>
 
           <div className="space-y-3 pt-2">
-            <ContactRow
-              icon={<Mail className="h-5 w-5" />}
-              label="Email"
-              value={personalInfo.email}
-              href={`mailto:${personalInfo.email}`}
-            />
-            <ContactRow
-              icon={<Linkedin className="h-5 w-5" />}
-              label="LinkedIn"
-              value={personalInfo.linkedin}
-              href={personalInfo.linkedinUrl}
-            />
-            <ContactRow
-              icon={<Github className="h-5 w-5" />}
-              label="GitHub"
-              value={personalInfo.github}
-              href={personalInfo.githubUrl}
-            />
-            <ContactRow
-              icon={<MapPin className="h-5 w-5" />}
-              label="Location"
-              value={personalInfo.location}
-            />
+            <ContactRow icon={<Mail className="h-5 w-5" />} label="Email" value={email} href={`mailto:${email}`} />
+            <ContactRow icon={<Linkedin className="h-5 w-5" />} label="LinkedIn" value={linkedinHandle} href={linkedinUrl} />
+            <ContactRow icon={<Github className="h-5 w-5" />} label="GitHub" value={githubHandle} href={githubUrl} />
+            <ContactRow icon={<MapPin className="h-5 w-5" />} label="Location" value={location} />
           </div>
 
           <div className="flex items-center gap-3 pt-4">
             {[
-              { icon: Github, href: personalInfo.githubUrl, label: "GitHub" },
-              { icon: Linkedin, href: personalInfo.linkedinUrl, label: "LinkedIn" },
-              { icon: Mail, href: `mailto:${personalInfo.email}`, label: "Email" },
+              { icon: Github, href: githubUrl, label: "GitHub" },
+              { icon: Linkedin, href: linkedinUrl, label: "LinkedIn" },
+              { icon: Mail, href: `mailto:${email}`, label: "Email" },
             ].map(({ icon: Icon, href, label }) => (
               <a
                 key={label}
@@ -104,6 +85,7 @@ export function Contact() {
             ))}
           </div>
         </Reveal>
+
 
         <Reveal delay={0.15}>
           <form

@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Github, Linkedin, Loader2, Mail, MapPin, Send } from "lucide-react";
 import { personalInfo } from "@/data/portfolio";
+import { useSiteProfile } from "@/hooks/use-portfolio";
 import { Reveal, Section, SectionEyebrow } from "./_shared";
 
 const schema = z.object({
@@ -16,6 +17,13 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export function Contact() {
+  const profile = useSiteProfile();
+  const email = profile?.email || personalInfo.email;
+  const githubUrl = profile?.github_url || personalInfo.githubUrl;
+  const linkedinUrl = profile?.linkedin_url || personalInfo.linkedinUrl;
+  const githubHandle = profile?.github_handle || personalInfo.github;
+  const linkedinHandle = profile?.linkedin_handle || personalInfo.linkedin;
+  const location = profile?.location || personalInfo.location;
   const [sent, setSent] = useState(false);
   const {
     register,

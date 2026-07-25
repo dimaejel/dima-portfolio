@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Github, Linkedin, Loader2, Mail, MapPin, Send } from "lucide-react";
 import { personalInfo } from "@/data/portfolio";
+import { useSiteProfile } from "@/hooks/use-portfolio";
 import { Reveal, Section, SectionEyebrow } from "./_shared";
 
 const schema = z.object({
@@ -16,6 +17,13 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export function Contact() {
+  const profile = useSiteProfile();
+  const email = profile?.email || personalInfo.email;
+  const githubUrl = profile?.github_url || personalInfo.githubUrl;
+  const linkedinUrl = profile?.linkedin_url || personalInfo.linkedinUrl;
+  const githubHandle = profile?.github_handle || personalInfo.github;
+  const linkedinHandle = profile?.linkedin_handle || personalInfo.linkedin;
+  const location = profile?.location || personalInfo.location;
   const [sent, setSent] = useState(false);
   const {
     register,
@@ -54,36 +62,17 @@ export function Contact() {
           </p>
 
           <div className="space-y-3 pt-2">
-            <ContactRow
-              icon={<Mail className="h-5 w-5" />}
-              label="Email"
-              value={personalInfo.email}
-              href={`mailto:${personalInfo.email}`}
-            />
-            <ContactRow
-              icon={<Linkedin className="h-5 w-5" />}
-              label="LinkedIn"
-              value={personalInfo.linkedin}
-              href={personalInfo.linkedinUrl}
-            />
-            <ContactRow
-              icon={<Github className="h-5 w-5" />}
-              label="GitHub"
-              value={personalInfo.github}
-              href={personalInfo.githubUrl}
-            />
-            <ContactRow
-              icon={<MapPin className="h-5 w-5" />}
-              label="Location"
-              value={personalInfo.location}
-            />
+            <ContactRow icon={<Mail className="h-5 w-5" />} label="Email" value={email} href={`mailto:${email}`} />
+            <ContactRow icon={<Linkedin className="h-5 w-5" />} label="LinkedIn" value={linkedinHandle} href={linkedinUrl} />
+            <ContactRow icon={<Github className="h-5 w-5" />} label="GitHub" value={githubHandle} href={githubUrl} />
+            <ContactRow icon={<MapPin className="h-5 w-5" />} label="Location" value={location} />
           </div>
 
           <div className="flex items-center gap-3 pt-4">
             {[
-              { icon: Github, href: personalInfo.githubUrl, label: "GitHub" },
-              { icon: Linkedin, href: personalInfo.linkedinUrl, label: "LinkedIn" },
-              { icon: Mail, href: `mailto:${personalInfo.email}`, label: "Email" },
+              { icon: Github, href: githubUrl, label: "GitHub" },
+              { icon: Linkedin, href: linkedinUrl, label: "LinkedIn" },
+              { icon: Mail, href: `mailto:${email}`, label: "Email" },
             ].map(({ icon: Icon, href, label }) => (
               <a
                 key={label}
@@ -96,6 +85,7 @@ export function Contact() {
             ))}
           </div>
         </Reveal>
+
 
         <Reveal delay={0.15}>
           <form

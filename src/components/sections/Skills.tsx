@@ -1,8 +1,24 @@
 import { motion } from "motion/react";
 import { skillGroups } from "@/data/portfolio";
+import { useSkills } from "@/hooks/use-portfolio";
+import type { Skill } from "@/lib/cms";
 import { Reveal, Section, SectionEyebrow, staggerContainer, staggerItem } from "./_shared";
 
+type Group = { title: string; skills: { name: string; badge: string; color: string }[] };
+
+function groupSkills(rows: Skill[]): Group[] {
+  const map = new Map<string, Group>();
+  for (const r of rows) {
+    if (!map.has(r.category)) map.set(r.category, { title: r.category, skills: [] });
+    map.get(r.category)!.skills.push({ name: r.name, badge: r.badge || r.name.slice(0, 2), color: r.color });
+  }
+  return Array.from(map.values());
+}
+
 export function Skills() {
+  const { data } = useSkills();
+  const groups: Group[] = data && data.length ? groupSkills(data) : skillGroups;
+
   return (
     <Section id="skills" className="bg-surface/60">
       <Reveal className="text-center max-w-2xl mx-auto mb-14">
@@ -17,12 +33,10 @@ export function Skills() {
       </Reveal>
 
       <div className="space-y-12">
-        {skillGroups.map((group) => (
+        {groups.map((group) => (
           <Reveal key={group.title}>
             <div className="flex items-center gap-4 mb-5">
-              <h3 className="font-display font-bold text-foreground text-lg">
-                {group.title}
-              </h3>
+              <h3 className="font-display font-bold text-foreground text-lg">{group.title}</h3>
               <span className="h-px flex-1 bg-border" />
               <span className="font-mono text-xs text-text-muted">
                 {group.skills.length.toString().padStart(2, "0")}
@@ -45,9 +59,7 @@ export function Skills() {
                   <div className="flex items-center gap-4">
                     <span
                       className="inline-flex h-11 w-11 items-center justify-center rounded-xl font-display font-bold text-sm text-white shadow-inner"
-                      style={{
-                        background: `linear-gradient(135deg, ${skill.color}, ${skill.color}aa)`,
-                      }}
+                      style={{ background: `linear-gradient(135deg, ${skill.color}, ${skill.color}aa)` }}
                       aria-hidden
                     >
                       {skill.badge}

@@ -1,7 +1,12 @@
 import { personalInfo } from "@/data/portfolio";
+import { useSiteProfile } from "@/hooks/use-portfolio";
 import { Reveal, Section, SectionEyebrow } from "./_shared";
 
 export function About() {
+  const profile = useSiteProfile();
+  const name = profile?.name || personalInfo.name;
+  const bio = profile?.bio || null;
+  const interests = profile?.interests?.length ? profile.interests : personalInfo.interests;
   return (
     <Section id="about">
       <div className="grid lg:grid-cols-2 gap-12 items-start">
@@ -11,26 +16,32 @@ export function About() {
             Crafting Code, <span className="text-gradient">Solving Problems.</span>
           </h2>
           <div className="space-y-4 text-text-secondary leading-relaxed">
-            <p>
-              I'm a Computer Science graduate with a deep passion for software development
-              and technology. My academic journey has equipped me with strong foundations in
-              algorithms, data structures, software engineering principles, and full-stack
-              development.
-            </p>
-            <p>
-              I love breaking down complex problems into elegant solutions. Whether it's
-              building efficient backend systems, designing intuitive web interfaces, or
-              modeling relational databases — I approach every challenge with curiosity and
-              discipline.
-            </p>
-            <p>
-              My goal is to join a forward-thinking team where I can contribute meaningful
-              code from day one, grow as an engineer, and help build products that make a
-              real difference.
-            </p>
+            {bio ? (
+              <p>{bio}</p>
+            ) : (
+              <>
+                <p>
+                  I'm a Computer Science graduate with a deep passion for software development
+                  and technology. My academic journey has equipped me with strong foundations in
+                  algorithms, data structures, software engineering principles, and full-stack
+                  development.
+                </p>
+                <p>
+                  I love breaking down complex problems into elegant solutions. Whether it's
+                  building efficient backend systems, designing intuitive web interfaces, or
+                  modeling relational databases — I approach every challenge with curiosity and
+                  discipline.
+                </p>
+                <p>
+                  My goal is to join a forward-thinking team where I can contribute meaningful
+                  code from day one, grow as an engineer, and help build products that make a
+                  real difference.
+                </p>
+              </>
+            )}
           </div>
           <div className="flex flex-wrap gap-2 pt-2">
-            {personalInfo.interests.map((tag) => (
+            {interests.map((tag) => (
               <span
                 key={tag}
                 className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
@@ -40,6 +51,7 @@ export function About() {
             ))}
           </div>
         </Reveal>
+
 
         <Reveal delay={0.15} className="space-y-4">
           <div className="rounded-2xl border border-border bg-surface overflow-hidden shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)]">
@@ -58,7 +70,7 @@ export function About() {
                 {"\n  "}
                 <span className="text-[#9cdcfe]">name</span>
                 <span className="text-foreground">:</span>{" "}
-                <span className="text-[#ce9178]">"{personalInfo.name}"</span>
+                <span className="text-[#ce9178]">"{name}"</span>
                 <span className="text-foreground">,</span>
                 {"\n  "}
                 <span className="text-[#9cdcfe]">role</span>

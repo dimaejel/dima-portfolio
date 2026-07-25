@@ -2,11 +2,17 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Download, Menu, X } from "lucide-react";
 import { navLinks, personalInfo } from "@/data/portfolio";
+import { useSiteProfile } from "@/hooks/use-portfolio";
 
 export function Navbar() {
+  const profile = useSiteProfile();
+  const name = profile?.name || personalInfo.name;
+  const initials = profile?.initials || personalInfo.initials;
+  const resumeUrl = profile?.resume_url ?? null;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("home");
+
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -33,9 +39,6 @@ export function Navbar() {
     return () => obs.disconnect();
   }, []);
 
-  const handleDownload = () => {
-    alert("CV coming soon — drop your PDF in /public/cv.pdf to enable this download.");
-  };
 
   return (
     <>
@@ -55,10 +58,10 @@ export function Navbar() {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <a href="#home" className="flex items-center gap-3 group">
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-brand text-white font-bold text-sm shadow-[0_4px_20px_rgba(79,142,247,0.35)]">
-              {personalInfo.initials}
+              {initials}
             </span>
             <span className="font-display font-bold text-foreground">
-              {personalInfo.name}
+              {name}
             </span>
           </a>
 
@@ -84,13 +87,17 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleDownload}
-              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-gradient-brand px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgba(124,58,237,0.6)] transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary/70"
-            >
-              <Download className="h-4 w-4" />
-              Download CV
-            </button>
+            {resumeUrl && (
+              <a
+                href={resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex items-center gap-2 rounded-full bg-gradient-brand px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgba(124,58,237,0.6)] transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary/70"
+              >
+                <Download className="h-4 w-4" />
+                Download CV
+              </a>
+            )}
             <button
               onClick={() => setOpen((o) => !o)}
               className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border text-foreground"

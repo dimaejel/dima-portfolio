@@ -1,7 +1,12 @@
 import { personalInfo } from "@/data/portfolio";
+import { useSiteProfile } from "@/hooks/use-portfolio";
 import { Reveal, Section, SectionEyebrow } from "./_shared";
 
 export function About() {
+  const profile = useSiteProfile();
+  const name = profile?.name || personalInfo.name;
+  const bio = profile?.bio || null;
+  const interests = profile?.interests?.length ? profile.interests : personalInfo.interests;
   return (
     <Section id="about">
       <div className="grid lg:grid-cols-2 gap-12 items-start">

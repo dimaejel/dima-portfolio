@@ -70,7 +70,7 @@ export function About() {
                 {"\n  "}
                 <span className="text-[#9cdcfe]">name</span>
                 <span className="text-foreground">:</span>{" "}
-                <span className="text-[#ce9178]">"{personalInfo.name}"</span>
+                <span className="text-[#ce9178]">"{name}"</span>
                 <span className="text-foreground">,</span>
                 {"\n  "}
                 <span className="text-[#9cdcfe]">role</span>

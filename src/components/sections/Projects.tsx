@@ -1,18 +1,62 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ExternalLink, Github, Sparkles } from "lucide-react";
-import { categoryIcons, projects, type Project } from "@/data/portfolio";
+import { projects as fallbackProjects } from "@/data/portfolio";
+import { useProjects } from "@/hooks/use-portfolio";
+import { categoryIcon } from "@/lib/icon-map";
 import { Reveal, Section, SectionEyebrow } from "./_shared";
 
-const filters = ["All", "Web", "Desktop", "Database"] as const;
-type Filter = (typeof filters)[number];
+type Card = {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  techStack: string[];
+  github: string | null;
+  demo: string | null;
+  image?: string | null;
+  gradient: string;
+  featured: boolean;
+};
 
 export function Projects() {
-  const [filter, setFilter] = useState<Filter>("All");
-  const list = useMemo(
-    () => (filter === "All" ? projects : projects.filter((p) => p.category === filter)),
-    [filter],
-  );
+  const { data } = useProjects();
+  const items: Card[] = useMemo(() => {
+    if (data && data.length) {
+      return data.map((p) => ({
+        id: p.id,
+        title: p.title,
+        category: p.category,
+        description: p.description,
+        techStack: p.tech_stack ?? [],
+        github: p.github_url,
+        demo: p.demo_url,
+        image: p.image_url,
+        gradient: p.gradient || "from-blue-500 to-violet-600",
+        featured: p.featured,
+      }));
+    }
+    return fallbackProjects.map((p, i) => ({
+      id: String(i),
+      title: p.title,
+      category: p.category,
+      description: p.description,
+      techStack: p.techStack,
+      github: p.github,
+      demo: p.demo,
+      gradient: p.gradient,
+      featured: !!p.featured,
+    }));
+  }, [data]);
+
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    items.forEach((i) => set.add(i.category));
+    return ["All", ...Array.from(set)];
+  }, [items]);
+
+  const [filter, setFilter] = useState<string>("All");
+  const list = filter === "All" ? items : items.filter((p) => p.category === filter);
 
   return (
     <Section id="projects">
@@ -22,13 +66,12 @@ export function Projects() {
           Things I've Built
         </h2>
         <p className="text-text-secondary mt-4">
-          A selection of academic, personal, and freelance work spanning the web, desktop,
-          and database design.
+          A selection of academic, personal, and freelance work.
         </p>
       </Reveal>
 
       <Reveal className="flex flex-wrap items-center justify-center gap-2 mb-10">
-        {filters.map((f) => (
+        {categories.map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
@@ -46,7 +89,7 @@ export function Projects() {
       <motion.div layout className="grid md:grid-cols-2 gap-6">
         <AnimatePresence mode="popLayout">
           {list.map((p) => (
-            <ProjectCard key={p.title} project={p} />
+            <ProjectCard key={p.id} project={p} />
           ))}
         </AnimatePresence>
       </motion.div>
@@ -54,8 +97,8 @@ export function Projects() {
   );
 }
 
-function ProjectCard({ project }: { project: Project }) {
-  const Icon = categoryIcons[project.category];
+function ProjectCard({ project }: { project: Card }) {
+  const Icon = categoryIcon(project.category);
   return (
     <motion.article
       layout
@@ -66,63 +109,52 @@ function ProjectCard({ project }: { project: Project }) {
       whileHover={{ y: -4 }}
       className="group relative flex flex-col rounded-2xl border border-border bg-surface overflow-hidden transition-shadow hover:shadow-[0_30px_80px_-40px_rgba(79,142,247,0.4)] hover:border-primary/40"
     >
-      <div
-        className={`relative h-52 bg-gradient-to-br ${project.gradient} flex items-center justify-center overflow-hidden`}
-      >
+      <div className={`relative h-52 bg-gradient-to-br ${project.gradient} flex items-center justify-center overflow-hidden`}>
         <div className="absolute inset-0 dot-grid opacity-20" />
-        <Icon className="h-20 w-20 text-white/90 drop-shadow-lg" strokeWidth={1.2} />
+        {project.image ? (
+          <img src={project.image} alt={project.title} className="absolute inset-0 h-full w-full object-cover" />
+        ) : (
+          <Icon className="h-20 w-20 text-white/90 drop-shadow-lg" strokeWidth={1.2} />
+        )}
         {project.featured && (
           <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-amber-400/95 text-amber-950 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
             <Sparkles className="h-3 w-3" /> Featured
           </span>
         )}
         <div className="absolute top-3 right-3 flex gap-2 opacity-0 -translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-          <a
-            href={project.github}
-            aria-label="View on GitHub"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-background/80 backdrop-blur text-foreground hover:bg-background"
-          >
-            <Github className="h-4 w-4" />
-          </a>
-          <a
-            href={project.demo}
-            aria-label="Live demo"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-background/80 backdrop-blur text-foreground hover:bg-background"
-          >
-            <ExternalLink className="h-4 w-4" />
-          </a>
+          {project.github && (
+            <a href={project.github} aria-label="View on GitHub" className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-background/80 backdrop-blur text-foreground hover:bg-background">
+              <Github className="h-4 w-4" />
+            </a>
+          )}
+          {project.demo && (
+            <a href={project.demo} aria-label="Live demo" className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-background/80 backdrop-blur text-foreground hover:bg-background">
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          )}
         </div>
       </div>
 
       <div className="flex flex-col flex-1 p-6 gap-3">
-        <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-          {project.category}
-        </span>
+        <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">{project.category}</span>
         <h3 className="font-display font-bold text-xl text-foreground">{project.title}</h3>
         <p className="text-sm text-text-secondary leading-relaxed">{project.description}</p>
         <div className="flex flex-wrap gap-2 pt-1">
           {project.techStack.map((t) => (
-            <span
-              key={t}
-              className="rounded-full border border-border bg-elevated px-2.5 py-1 text-[11px] font-mono text-text-secondary"
-            >
-              {t}
-            </span>
+            <span key={t} className="rounded-full border border-border bg-elevated px-2.5 py-1 text-[11px] font-mono text-text-secondary">{t}</span>
           ))}
         </div>
         <div className="flex gap-3 pt-4 mt-auto">
-          <a
-            href={project.github}
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-primary/40 hover:text-primary transition-colors"
-          >
-            <Github className="h-3.5 w-3.5" /> GitHub
-          </a>
-          <a
-            href={project.demo}
-            className="inline-flex items-center gap-2 rounded-lg bg-gradient-brand px-3 py-2 text-xs font-semibold text-white shadow-[0_8px_24px_-10px_rgba(124,58,237,0.6)]"
-          >
-            <ExternalLink className="h-3.5 w-3.5" /> Live Demo
-          </a>
+          {project.github && (
+            <a href={project.github} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-primary/40 hover:text-primary transition-colors">
+              <Github className="h-3.5 w-3.5" /> GitHub
+            </a>
+          )}
+          {project.demo && (
+            <a href={project.demo} className="inline-flex items-center gap-2 rounded-lg bg-gradient-brand px-3 py-2 text-xs font-semibold text-white shadow-[0_8px_24px_-10px_rgba(124,58,237,0.6)]">
+              <ExternalLink className="h-3.5 w-3.5" /> Live Demo
+            </a>
+          )}
         </div>
       </div>
     </motion.article>

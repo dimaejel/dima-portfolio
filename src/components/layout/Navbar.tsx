@@ -2,11 +2,17 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Download, Menu, X } from "lucide-react";
 import { navLinks, personalInfo } from "@/data/portfolio";
+import { useSiteProfile } from "@/hooks/use-portfolio";
 
 export function Navbar() {
+  const profile = useSiteProfile();
+  const name = profile?.name || personalInfo.name;
+  const initials = profile?.initials || personalInfo.initials;
+  const resumeUrl = profile?.resume_url ?? null;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("home");
+
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);

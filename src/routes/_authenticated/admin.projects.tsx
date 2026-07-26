@@ -141,12 +141,28 @@ function ProjectForm({ v, onChange }: { v: Partial<Project>; onChange: (p: Parti
           </label>
         </div>
       </div>
-      <div className="flex gap-4">
+      <div>
+        <AdminLabel>Gallery images (one URL per line)</AdminLabel>
+        <div className="flex flex-wrap gap-2 mb-2">
+          {(v.gallery ?? []).map((g) => (
+            <img key={g} src={g} alt="" className="h-14 w-24 rounded object-cover border border-border" />
+          ))}
+        </div>
+        <AdminTextarea rows={3} value={galleryText} onChange={(e) => setGallery(e.target.value)} placeholder="https://…" />
+        <label className="mt-2 inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm cursor-pointer hover:border-primary/40">
+          <Upload className="h-4 w-4" /> Upload gallery image
+          <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadGallery(f); e.target.value = ""; }} />
+        </label>
+      </div>
+      <div className="flex flex-wrap gap-4">
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={!!v.featured} onChange={(e) => onChange({ featured: e.target.checked })} /> Featured
         </label>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={v.visible ?? true} onChange={(e) => onChange({ visible: e.target.checked })} /> Visible
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={v.published ?? true} onChange={(e) => onChange({ published: e.target.checked })} /> Published
         </label>
       </div>
     </div>

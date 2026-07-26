@@ -24,7 +24,10 @@ function ProjectsAdmin() {
         description: "",
         category: "web",
         tech_stack: [],
+        features: [],
+        gallery: [],
         visible: true,
+        published: true,
         featured: false,
       })}
       columns={[

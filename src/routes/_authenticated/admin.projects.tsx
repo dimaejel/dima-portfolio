@@ -96,7 +96,16 @@ function ProjectForm({ v, onChange }: { v: Partial<Project>; onChange: (p: Parti
   return (
     <div className="grid gap-3">
       <div><AdminLabel>Title</AdminLabel><AdminInput value={v.title ?? ""} onChange={(e) => onChange({ title: e.target.value })} /></div>
-      <div><AdminLabel>Description</AdminLabel><AdminTextarea value={v.description ?? ""} onChange={(e) => onChange({ description: e.target.value })} /></div>
+      <div><AdminLabel>Short description</AdminLabel><AdminTextarea value={v.description ?? ""} onChange={(e) => onChange({ description: e.target.value })} /></div>
+      <div><AdminLabel>Full description (details page)</AdminLabel><AdminTextarea rows={6} value={v.full_description ?? ""} onChange={(e) => onChange({ full_description: e.target.value })} /></div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><AdminLabel>My role</AdminLabel><AdminInput value={v.role ?? ""} onChange={(e) => onChange({ role: e.target.value })} placeholder="Full-stack Developer" /></div>
+        <div><AdminLabel>Duration</AdminLabel><AdminInput value={v.duration ?? ""} onChange={(e) => onChange({ duration: e.target.value })} placeholder="Jan 2025 – Apr 2025" /></div>
+      </div>
+      <div><AdminLabel>Key features (one per line)</AdminLabel><AdminTextarea rows={4} value={featuresText} onChange={(e) => setFeatures(e.target.value)} /></div>
+      <div><AdminLabel>Challenges</AdminLabel><AdminTextarea value={v.challenges ?? ""} onChange={(e) => onChange({ challenges: e.target.value })} /></div>
+      <div><AdminLabel>Solutions</AdminLabel><AdminTextarea value={v.solutions ?? ""} onChange={(e) => onChange({ solutions: e.target.value })} /></div>
+      <div><AdminLabel>Results / outcomes</AdminLabel><AdminTextarea value={v.results ?? ""} onChange={(e) => onChange({ results: e.target.value })} /></div>
       <div className="grid grid-cols-2 gap-3">
         <div>
           <AdminLabel>Category</AdminLabel>

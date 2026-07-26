@@ -36,16 +36,7 @@ export function Projects() {
         image: p.image_url,
         gradient: p.gradient || "from-blue-500 to-violet-600",
         featured: p.featured,
-        hasDetails: Boolean(
-          p.full_description ||
-            p.role ||
-            p.duration ||
-            p.challenges ||
-            p.solutions ||
-            p.results ||
-            (p.features?.length ?? 0) > 0 ||
-            (p.gallery?.length ?? 0) > 0,
-        ),
+        hasDetails: true,
       }));
     }
     return fallbackProjects.map((p, i) => ({

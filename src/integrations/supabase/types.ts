@@ -227,15 +227,24 @@ export type Database = {
       projects: {
         Row: {
           category: string
+          challenges: string | null
           created_at: string
           demo_url: string | null
           description: string
           display_order: number
+          duration: string | null
           featured: boolean
+          features: string[]
+          full_description: string | null
+          gallery: string[]
           github_url: string | null
           gradient: string | null
           id: string
           image_url: string | null
+          published: boolean
+          results: string | null
+          role: string | null
+          solutions: string | null
           tech_stack: string[]
           title: string
           updated_at: string
@@ -243,15 +252,24 @@ export type Database = {
         }
         Insert: {
           category: string
+          challenges?: string | null
           created_at?: string
           demo_url?: string | null
           description?: string
           display_order?: number
+          duration?: string | null
           featured?: boolean
+          features?: string[]
+          full_description?: string | null
+          gallery?: string[]
           github_url?: string | null
           gradient?: string | null
           id?: string
           image_url?: string | null
+          published?: boolean
+          results?: string | null
+          role?: string | null
+          solutions?: string | null
           tech_stack?: string[]
           title: string
           updated_at?: string
@@ -259,15 +277,24 @@ export type Database = {
         }
         Update: {
           category?: string
+          challenges?: string | null
           created_at?: string
           demo_url?: string | null
           description?: string
           display_order?: number
+          duration?: string | null
           featured?: boolean
+          features?: string[]
+          full_description?: string | null
+          gallery?: string[]
           github_url?: string | null
           gradient?: string | null
           id?: string
           image_url?: string | null
+          published?: boolean
+          results?: string | null
+          role?: string | null
+          solutions?: string | null
           tech_stack?: string[]
           title?: string
           updated_at?: string

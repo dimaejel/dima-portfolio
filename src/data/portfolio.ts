@@ -7,8 +7,8 @@ import {
 } from "lucide-react";
 
 export const personalInfo = {
-  name: "Alex Morgan",
-  initials: "AM",
+  name: "Dima Ejel",
+  initials: "DE",
   title: "Computer Science Graduate",
   roles: ["Software Engineer", "Web Developer", "Problem Solver"],
   bio: "Passionate about building elegant, scalable software solutions. I thrive at the intersection of clean code, intuitive design, and real-world impact. Currently seeking opportunities in Software Engineering and Web Development.",

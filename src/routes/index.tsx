@@ -12,7 +12,7 @@ import { Achievements } from "@/components/sections/Achievements";
 import { Contact } from "@/components/sections/Contact";
 import { personalInfo } from "@/data/portfolio";
 
-const title = `${personalInfo.name} — CS Graduate | Software Engineer | Web Developer`;
+const title = `${personalInfo.name} — Computer Science Graduate | Software Engineer | Web Developer`;
 const description =
   "Computer Science graduate seeking Software Engineering, Web Development, and IT roles. Portfolio of projects in Java, React, Node.js, and MySQL.";
 

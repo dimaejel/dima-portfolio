@@ -45,6 +45,7 @@ function ProjectsAdmin() {
           ),
         },
         { header: "Featured", render: (r) => (r.featured ? "★" : "—") },
+        { header: "Published", render: (r) => (r.published ? "Yes" : "Draft") },
       ]}
       renderForm={(v, onChange) => <ProjectForm v={v} onChange={onChange} />}
     />
@@ -53,10 +54,34 @@ function ProjectsAdmin() {
 
 function ProjectForm({ v, onChange }: { v: Partial<Project>; onChange: (p: Partial<Project>) => void }) {
   const [techText, setTechText] = useState((v.tech_stack ?? []).join(", "));
+  const [featuresText, setFeaturesText] = useState((v.features ?? []).join("\n"));
+  const [galleryText, setGalleryText] = useState((v.gallery ?? []).join("\n"));
   const setTech = (val: string) => {
     setTechText(val);
     onChange({ tech_stack: val.split(",").map((s) => s.trim()).filter(Boolean) });
   };
+  const setFeatures = (val: string) => {
+    setFeaturesText(val);
+    onChange({ features: val.split("\n").map((s) => s.trim()).filter(Boolean) });
+  };
+  const setGallery = (val: string) => {
+    setGalleryText(val);
+    onChange({ gallery: val.split("\n").map((s) => s.trim()).filter(Boolean) });
+  };
+
+  const uploadGallery = async (file: File) => {
+    try {
+      const url = await uploadMedia(file, "projects");
+      const next = [...(v.gallery ?? []), url];
+      setGalleryText(next.join("\n"));
+      onChange({ gallery: next });
+      toast.success("Gallery image uploaded.");
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  };
+
+
 
   const upload = async (file: File) => {
     try {

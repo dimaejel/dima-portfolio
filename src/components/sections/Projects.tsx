@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ExternalLink, Github, Sparkles } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ArrowRight, ExternalLink, Github, Sparkles } from "lucide-react";
 import { projects as fallbackProjects } from "@/data/portfolio";
 import { useProjects } from "@/hooks/use-portfolio";
 import { categoryIcon } from "@/lib/icon-map";
@@ -17,6 +18,7 @@ type Card = {
   image?: string | null;
   gradient: string;
   featured: boolean;
+  hasDetails: boolean;
 };
 
 export function Projects() {
@@ -34,6 +36,7 @@ export function Projects() {
         image: p.image_url,
         gradient: p.gradient || "from-blue-500 to-violet-600",
         featured: p.featured,
+        hasDetails: true,
       }));
     }
     return fallbackProjects.map((p, i) => ({
@@ -46,6 +49,7 @@ export function Projects() {
       demo: p.demo,
       gradient: p.gradient,
       featured: !!p.featured,
+      hasDetails: false,
     }));
   }, [data]);
 
@@ -144,7 +148,16 @@ function ProjectCard({ project }: { project: Card }) {
             <span key={t} className="rounded-full border border-border bg-elevated px-2.5 py-1 text-[11px] font-mono text-text-secondary">{t}</span>
           ))}
         </div>
-        <div className="flex gap-3 pt-4 mt-auto">
+        <div className="flex flex-wrap gap-3 pt-4 mt-auto">
+          {project.hasDetails && (
+            <Link
+              to="/projects/$id"
+              params={{ id: project.id }}
+              className="inline-flex items-center gap-2 rounded-lg border border-primary/40 px-3 py-2 text-xs font-semibold text-primary hover:bg-primary/10 transition-colors"
+            >
+              <ArrowRight className="h-3.5 w-3.5" /> View Details
+            </Link>
+          )}
           {project.github && (
             <a href={project.github} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-primary/40 hover:text-primary transition-colors">
               <Github className="h-3.5 w-3.5" /> GitHub

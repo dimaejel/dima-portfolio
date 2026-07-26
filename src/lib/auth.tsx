@@ -40,10 +40,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export const useAuth = () => useContext(Ctx);
 
 export function useIsAdmin() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const q = useQuery({
     queryKey: ["is-admin", user?.id],
-    enabled: !!user,
+    enabled: !!user && !authLoading,
+    staleTime: 60_000,
+    retry: 1,
     queryFn: async () => {
       if (!user) return false;
       const { data, error } = await supabase
@@ -56,7 +58,9 @@ export function useIsAdmin() {
       return !!data;
     },
   });
-  return { isAdmin: !!q.data, loading: q.isLoading };
+  // Never report "not admin" while the session or the role lookup is still resolving.
+  const loading = authLoading || (!!user && q.isPending);
+  return { isAdmin: !!q.data, loading, signedIn: !!user };
 }
 
 export async function signOut() {

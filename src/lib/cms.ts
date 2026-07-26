@@ -43,6 +43,12 @@ async function list<T>(table: string, visibleOnly = true): Promise<T[]> {
 }
 
 export const fetchProjects = (all = false) => list<Project>("projects", !all);
+
+export async function fetchProject(id: string): Promise<Project | null> {
+  const { data, error } = await supabase.from("projects").select("*").eq("id", id).maybeSingle();
+  if (error) throw error;
+  return data;
+}
 export const fetchSkills = (all = false) => list<Skill>("skills", !all);
 export const fetchExperience = (all = false) => list<Experience>("experience", !all);
 export const fetchEducation = (all = false) => list<Education>("education", !all);

@@ -50,23 +50,31 @@ const nav: NavItem[] = [
 ];
 
 function AdminLayout() {
-  const { isAdmin, loading } = useIsAdmin();
+  const { isAdmin, loading, signedIn } = useIsAdmin();
   const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !isAdmin) {
-      navigate({ to: "/" });
+    if (loading) return;
+    if (!signedIn) {
+      navigate({ to: "/auth", replace: true });
+      return;
     }
-  }, [loading, isAdmin, navigate]);
+    if (!isAdmin) navigate({ to: "/", replace: true });
+  }, [loading, isAdmin, signedIn, navigate]);
 
   if (loading || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background text-text-secondary">
-        {loading ? "Checking permissions…" : "Not authorized. Redirecting…"}
+        {loading
+          ? "Checking permissions…"
+          : !signedIn
+            ? "Please sign in…"
+            : "Not authorized. Redirecting…"}
       </div>
     );
   }
+
 
   return (
     <SidebarProvider>

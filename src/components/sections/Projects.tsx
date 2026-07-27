@@ -149,15 +149,7 @@ function ProjectCard({ project }: { project: Card }) {
           ))}
         </div>
         <div className="flex flex-wrap gap-3 pt-4 mt-auto">
-          {project.hasDetails && (
-            <Link
-              to="/projects/$id"
-              params={{ id: project.id }}
-              className="inline-flex items-center gap-2 rounded-lg border border-primary/40 px-3 py-2 text-xs font-semibold text-primary hover:bg-primary/10 transition-colors"
-            >
-              <ArrowRight className="h-3.5 w-3.5" /> View Details
-            </Link>
-          )}
+
           {project.github && (
             <a href={project.github} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-primary/40 hover:text-primary transition-colors">
               <Github className="h-3.5 w-3.5" /> GitHub

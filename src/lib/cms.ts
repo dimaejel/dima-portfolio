@@ -64,14 +64,42 @@ export async function fetchMessages(): Promise<ContactMessage[]> {
   return data ?? [];
 }
 
+export const MEDIA_BUCKET = "site-media";
+const PUBLIC_PREFIX = `/storage/v1/object/public/${MEDIA_BUCKET}/`;
+const SIGN_PREFIX = `/storage/v1/object/sign/${MEDIA_BUCKET}/`;
+
+/** Returns the object path inside the site-media bucket, or null for external URLs. */
+export function storagePath(value?: string | null): string | null {
+  if (!value) return null;
+  for (const prefix of [PUBLIC_PREFIX, SIGN_PREFIX]) {
+    const i = value.indexOf(prefix);
+    if (i >= 0) return decodeURIComponent(value.slice(i + prefix.length).split("?")[0]);
+  }
+  if (/^https?:\/\//i.test(value) || value.startsWith("data:")) return null;
+  return value.replace(/^\/+/, "");
+}
+
+/** Turns a stored value (bucket path or URL) into a URL usable as an <img>/<a> src. */
+export async function resolveMediaUrl(value?: string | null): Promise<string | null> {
+  if (!value) return null;
+  const path = storagePath(value);
+  if (!path) return value;
+  const { data, error } = await supabase.storage
+    .from(MEDIA_BUCKET)
+    .createSignedUrl(path, 60 * 60 * 24 * 7);
+  if (error) return null;
+  return data?.signedUrl ?? null;
+}
+
+/** Uploads a file and returns its storage path (stored in the DB, resolved at render). */
 export async function uploadMedia(file: File, folder: string): Promise<string> {
   const ext = file.name.split(".").pop() ?? "bin";
   const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-  const { error } = await supabase.storage.from("site-media").upload(path, file, {
+  const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
     upsert: false,
-    contentType: file.type,
+    contentType: file.type || undefined,
   });
   if (error) throw error;
-  const { data } = supabase.storage.from("site-media").getPublicUrl(path);
-  return data.publicUrl;
+  return path;
 }
+

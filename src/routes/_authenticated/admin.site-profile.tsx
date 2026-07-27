@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, Upload } from "lucide-react";
 import { PageHeader, AdminInput, AdminTextarea, AdminLabel, AdminButton } from "@/components/admin/PageHeader";
+import { MediaImage, useMediaUrl } from "@/components/MediaImage";
+
 
 export const Route = createFileRoute("/_authenticated/admin/site-profile")({
   component: SiteProfilePage,

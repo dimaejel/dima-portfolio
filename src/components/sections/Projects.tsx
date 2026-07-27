@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Link } from "@tanstack/react-router";
-import { ArrowRight, ExternalLink, Github, Sparkles } from "lucide-react";
+import { ExternalLink, Github, Sparkles } from "lucide-react";
 import { projects as fallbackProjects } from "@/data/portfolio";
 import { useProjects } from "@/hooks/use-portfolio";
+import { useMediaUrl } from "@/components/MediaImage";
 import { categoryIcon } from "@/lib/icon-map";
 import { Reveal, Section, SectionEyebrow } from "./_shared";
 
@@ -18,8 +18,8 @@ type Card = {
   image?: string | null;
   gradient: string;
   featured: boolean;
-  hasDetails: boolean;
 };
+
 
 export function Projects() {
   const { data } = useProjects();
@@ -36,7 +36,6 @@ export function Projects() {
         image: p.image_url,
         gradient: p.gradient || "from-blue-500 to-violet-600",
         featured: p.featured,
-        hasDetails: true,
       }));
     }
     return fallbackProjects.map((p, i) => ({
@@ -49,7 +48,6 @@ export function Projects() {
       demo: p.demo,
       gradient: p.gradient,
       featured: !!p.featured,
-      hasDetails: false,
     }));
   }, [data]);
 
@@ -103,6 +101,7 @@ export function Projects() {
 
 function ProjectCard({ project }: { project: Card }) {
   const Icon = categoryIcon(project.category);
+  const imageUrl = useMediaUrl(project.image);
   return (
     <motion.article
       layout
@@ -115,8 +114,9 @@ function ProjectCard({ project }: { project: Card }) {
     >
       <div className={`relative h-52 bg-gradient-to-br ${project.gradient} flex items-center justify-center overflow-hidden`}>
         <div className="absolute inset-0 dot-grid opacity-20" />
-        {project.image ? (
-          <img src={project.image} alt={project.title} className="absolute inset-0 h-full w-full object-cover" />
+        {imageUrl ? (
+          <img src={imageUrl} alt={project.title} className="absolute inset-0 h-full w-full object-cover" />
+
         ) : (
           <Icon className="h-20 w-20 text-white/90 drop-shadow-lg" strokeWidth={1.2} />
         )}
@@ -149,15 +149,7 @@ function ProjectCard({ project }: { project: Card }) {
           ))}
         </div>
         <div className="flex flex-wrap gap-3 pt-4 mt-auto">
-          {project.hasDetails && (
-            <Link
-              to="/projects/$id"
-              params={{ id: project.id }}
-              className="inline-flex items-center gap-2 rounded-lg border border-primary/40 px-3 py-2 text-xs font-semibold text-primary hover:bg-primary/10 transition-colors"
-            >
-              <ArrowRight className="h-3.5 w-3.5" /> View Details
-            </Link>
-          )}
+
           {project.github && (
             <a href={project.github} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-primary/40 hover:text-primary transition-colors">
               <Github className="h-3.5 w-3.5" /> GitHub

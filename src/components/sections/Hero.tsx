@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { personalInfo, navLinks } from "@/data/portfolio";
 import { useSiteProfile, profileStats } from "@/hooks/use-portfolio";
+import { useMediaUrl } from "@/components/MediaImage";
+
 
 function Typewriter({ words }: { words: string[] }) {
   const reduce = useReducedMotion();
@@ -60,9 +62,10 @@ export function Hero() {
   const githubUrl = profile?.github_url || personalInfo.githubUrl;
   const linkedinUrl = profile?.linkedin_url || personalInfo.linkedinUrl;
   const email = profile?.email || personalInfo.email;
-  const resumeUrl = profile?.resume_url ?? null;
+  const resumeUrl = useMediaUrl(profile?.resume_url);
   const stats = profileStats(profile).length ? profileStats(profile) : personalInfo.stats;
-  const avatarUrl = profile?.avatar_url ?? null;
+  const avatarUrl = useMediaUrl(profile?.avatar_url);
+
 
   const orbitChips = ["React", "Java", "Node.js", "MySQL"];
 

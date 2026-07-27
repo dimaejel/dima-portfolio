@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, Upload } from "lucide-react";
 import { PageHeader, AdminInput, AdminTextarea, AdminLabel, AdminButton } from "@/components/admin/PageHeader";
+import { MediaImage, useMediaUrl } from "@/components/MediaImage";
+
 
 export const Route = createFileRoute("/_authenticated/admin/site-profile")({
   component: SiteProfilePage,
@@ -122,18 +124,20 @@ function SiteProfilePage() {
 
         <Field label="Avatar" wide>
           <div className="flex flex-wrap items-center gap-3">
-            {form.avatar_url && <img src={form.avatar_url} alt="" className="h-16 w-16 rounded-full object-cover border border-border" />}
-            <AdminInput value={form.avatar_url ?? ""} onChange={(e) => upd("avatar_url", e.target.value)} placeholder="https://…" />
+            <MediaImage path={form.avatar_url} alt="" className="h-16 w-16 rounded-full object-cover border border-border" />
+            <AdminInput value={form.avatar_url ?? ""} onChange={(e) => upd("avatar_url", e.target.value)} placeholder="avatar/…" />
             <FileButton onFile={(f) => upload("avatar", f)} />
           </div>
         </Field>
 
-        <Field label="Resume / CV URL" wide>
+        <Field label="Resume / CV" wide>
           <div className="flex flex-wrap items-center gap-3">
-            <AdminInput value={form.resume_url ?? ""} onChange={(e) => upd("resume_url", e.target.value)} placeholder="https://…" />
+            <AdminInput value={form.resume_url ?? ""} onChange={(e) => upd("resume_url", e.target.value)} placeholder="resume/…" />
             <FileButton onFile={(f) => upload("resume", f)} accept=".pdf,.doc,.docx" />
+            <ResumePreview path={form.resume_url} />
           </div>
         </Field>
+
       </div>
     </div>
   );
@@ -163,5 +167,15 @@ function FileButton({ onFile, accept = "image/*" }: { onFile: (f: File) => void;
         }}
       />
     </label>
+  );
+}
+
+function ResumePreview({ path }: { path: string | null }) {
+  const url = useMediaUrl(path);
+  if (!url) return null;
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline">
+      Open current CV
+    </a>
   );
 }

@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CrudList } from "@/components/admin/CrudList";
 import { AdminInput, AdminTextarea, AdminLabel } from "@/components/admin/PageHeader";
 import { fetchProjects, qk, uploadMedia, type Project } from "@/lib/cms";
+import { MediaImage } from "@/components/MediaImage";
+
 import { useState } from "react";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";

@@ -101,6 +101,7 @@ export function Projects() {
 
 function ProjectCard({ project }: { project: Card }) {
   const Icon = categoryIcon(project.category);
+  const imageUrl = useMediaUrl(project.image);
   return (
     <motion.article
       layout
@@ -113,8 +114,9 @@ function ProjectCard({ project }: { project: Card }) {
     >
       <div className={`relative h-52 bg-gradient-to-br ${project.gradient} flex items-center justify-center overflow-hidden`}>
         <div className="absolute inset-0 dot-grid opacity-20" />
-        {project.image ? (
-          <img src={project.image} alt={project.title} className="absolute inset-0 h-full w-full object-cover" />
+        {imageUrl ? (
+          <img src={imageUrl} alt={project.title} className="absolute inset-0 h-full w-full object-cover" />
+
         ) : (
           <Icon className="h-20 w-20 text-white/90 drop-shadow-lg" strokeWidth={1.2} />
         )}

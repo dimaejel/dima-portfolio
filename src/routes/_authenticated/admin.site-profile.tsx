@@ -169,3 +169,13 @@ function FileButton({ onFile, accept = "image/*" }: { onFile: (f: File) => void;
     </label>
   );
 }
+
+function ResumePreview({ path }: { path: string | null }) {
+  const url = useMediaUrl(path);
+  if (!url) return null;
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline">
+      Open current CV
+    </a>
+  );
+}

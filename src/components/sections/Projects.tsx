@@ -36,7 +36,6 @@ export function Projects() {
         image: p.image_url,
         gradient: p.gradient || "from-blue-500 to-violet-600",
         featured: p.featured,
-        hasDetails: true,
       }));
     }
     return fallbackProjects.map((p, i) => ({
@@ -49,7 +48,6 @@ export function Projects() {
       demo: p.demo,
       gradient: p.gradient,
       featured: !!p.featured,
-      hasDetails: false,
     }));
   }, [data]);
 

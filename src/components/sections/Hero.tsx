@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { personalInfo, navLinks } from "@/data/portfolio";
 import { useSiteProfile, profileStats } from "@/hooks/use-portfolio";
+import { useMediaUrl } from "@/components/MediaImage";
+
 
 function Typewriter({ words }: { words: string[] }) {
   const reduce = useReducedMotion();

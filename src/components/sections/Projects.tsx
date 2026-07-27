@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Link } from "@tanstack/react-router";
-import { ArrowRight, ExternalLink, Github, Sparkles } from "lucide-react";
+import { ExternalLink, Github, Sparkles } from "lucide-react";
 import { projects as fallbackProjects } from "@/data/portfolio";
 import { useProjects } from "@/hooks/use-portfolio";
+import { useMediaUrl } from "@/components/MediaImage";
 import { categoryIcon } from "@/lib/icon-map";
 import { Reveal, Section, SectionEyebrow } from "./_shared";
 
@@ -18,8 +18,8 @@ type Card = {
   image?: string | null;
   gradient: string;
   featured: boolean;
-  hasDetails: boolean;
 };
+
 
 export function Projects() {
   const { data } = useProjects();

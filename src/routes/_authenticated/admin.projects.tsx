@@ -133,8 +133,8 @@ function ProjectForm({ v, onChange }: { v: Partial<Project>; onChange: (p: Parti
       <div>
         <AdminLabel>Image</AdminLabel>
         <div className="flex flex-wrap items-center gap-3">
-          {v.image_url && <img src={v.image_url} alt="" className="h-14 w-24 rounded object-cover border border-border" />}
-          <AdminInput value={v.image_url ?? ""} onChange={(e) => onChange({ image_url: e.target.value })} placeholder="https://…" />
+          <MediaImage path={v.image_url} alt="" className="h-14 w-24 rounded object-cover border border-border" />
+          <AdminInput value={v.image_url ?? ""} onChange={(e) => onChange({ image_url: e.target.value })} placeholder="projects/…" />
           <label className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm cursor-pointer hover:border-primary/40">
             <Upload className="h-4 w-4" /> Upload
             <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f); e.target.value = ""; }} />
@@ -142,12 +142,13 @@ function ProjectForm({ v, onChange }: { v: Partial<Project>; onChange: (p: Parti
         </div>
       </div>
       <div>
-        <AdminLabel>Gallery images (one URL per line)</AdminLabel>
+        <AdminLabel>Gallery images (one per line)</AdminLabel>
         <div className="flex flex-wrap gap-2 mb-2">
           {(v.gallery ?? []).map((g) => (
-            <img key={g} src={g} alt="" className="h-14 w-24 rounded object-cover border border-border" />
+            <MediaImage key={g} path={g} alt="" className="h-14 w-24 rounded object-cover border border-border" />
           ))}
         </div>
+
         <AdminTextarea rows={3} value={galleryText} onChange={(e) => setGallery(e.target.value)} placeholder="https://…" />
         <label className="mt-2 inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm cursor-pointer hover:border-primary/40">
           <Upload className="h-4 w-4" /> Upload gallery image

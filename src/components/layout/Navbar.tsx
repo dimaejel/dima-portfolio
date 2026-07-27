@@ -3,12 +3,14 @@ import { motion, AnimatePresence } from "motion/react";
 import { Download, Menu, X } from "lucide-react";
 import { navLinks, personalInfo } from "@/data/portfolio";
 import { useSiteProfile } from "@/hooks/use-portfolio";
+import { useMediaUrl } from "@/components/MediaImage";
 
 export function Navbar() {
   const profile = useSiteProfile();
   const name = profile?.name || personalInfo.name;
   const initials = profile?.initials || personalInfo.initials;
-  const resumeUrl = profile?.resume_url ?? null;
+  const resumeUrl = useMediaUrl(profile?.resume_url);
+
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("home");

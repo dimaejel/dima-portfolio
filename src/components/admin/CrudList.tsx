@@ -272,22 +272,6 @@ export function CrudList<T extends CrudRow>({
 }
 
 
-function IconBtn({
-  children,
-  danger,
-  ...rest
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { danger?: boolean }) {
-  return (
-    <button
-      {...rest}
-      className={
-        "inline-flex items-center justify-center h-8 w-8 rounded-md border border-transparent transition-colors " +
-        (danger ? "text-red-400 hover:bg-red-500/10" : "text-text-secondary hover:bg-elevated hover:text-foreground") +
-        " disabled:opacity-30 disabled:cursor-not-allowed"
-      }
-    />
-  );
-}
 
 function Modal({ children, onClose, title }: { children: ReactNode; onClose: () => void; title: string }) {
   return (

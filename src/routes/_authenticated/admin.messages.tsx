@@ -6,6 +6,7 @@ import { useState } from "react";
 import { PageHeader, EmptyState, AdminButton } from "@/components/admin/PageHeader";
 import { Mail, MailOpen, Trash2, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/admin/Actions";
 
 export const Route = createFileRoute("/_authenticated/admin/messages")({
   component: MessagesAdmin,
@@ -15,6 +16,7 @@ function MessagesAdmin() {
   const qc = useQueryClient();
   const q = useQuery({ queryKey: qk.messages, queryFn: fetchMessages });
   const [selected, setSelected] = useState<ContactMessage | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const patch = useMutation({
     mutationFn: async ({ id, read }: { id: string; read: boolean }) => {
@@ -103,9 +105,8 @@ function MessagesAdmin() {
             <div className="mt-4 flex justify-between">
               <AdminButton
                 variant="danger"
-                onClick={() => {
-                  if (confirm("Delete this message?")) del.mutate(selected.id);
-                }}
+                onClick={() => setConfirmDelete(true)}
+                title="Delete this message permanently"
               >
                 <Trash2 className="h-4 w-4" /> Delete
               </AdminButton>
@@ -114,6 +115,14 @@ function MessagesAdmin() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmDelete}
+        title="Delete this message?"
+        description="This contact message will be permanently removed from your inbox. This action cannot be undone."
+        onConfirm={() => selected && del.mutate(selected.id)}
+        onCancel={() => setConfirmDelete(false)}
+      />
     </div>
   );
 }

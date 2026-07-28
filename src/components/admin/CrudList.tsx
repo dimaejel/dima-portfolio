@@ -2,12 +2,32 @@ import { useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Pencil, Trash2, Plus, ChevronUp, ChevronDown, Eye, EyeOff } from "lucide-react";
+import {
+  Pencil,
+  Trash2,
+  Plus,
+  ChevronUp,
+  ChevronDown,
+  Eye,
+  EyeOff,
+  Megaphone,
+  FileEdit,
+  Star,
+  StarOff,
+} from "lucide-react";
 import { PageHeader, AdminButton, EmptyState } from "./PageHeader";
+import { ActionButton, ConfirmDialog, StatusBadge } from "./Actions";
 
-export type CrudRow = { id: string; display_order?: number; visible?: boolean };
+export type CrudRow = {
+  id: string;
+  display_order?: number;
+  visible?: boolean;
+  published?: boolean;
+  featured?: boolean;
+};
 
 type Column<T> = { header: string; render: (row: T) => ReactNode };
+
 
 export function CrudList<T extends CrudRow>({
   title,

@@ -1,23 +1,69 @@
+import { useState } from "react";
 import { motion } from "motion/react";
 import { skillGroups } from "@/data/portfolio";
 import { useSkills } from "@/hooks/use-portfolio";
 import type { Skill } from "@/lib/cms";
+import { skillIconUrl, slugForSkill } from "@/lib/skill-icons";
 import { Reveal, Section, SectionEyebrow, staggerContainer, staggerItem } from "./_shared";
 
-type Group = { title: string; skills: { name: string; badge: string; color: string }[] };
+type SkillItem = { name: string; badge: string; color: string; slug: string | null };
+type Group = { title: string; skills: SkillItem[] };
 
 function groupSkills(rows: Skill[]): Group[] {
   const map = new Map<string, Group>();
   for (const r of rows) {
     if (!map.has(r.category)) map.set(r.category, { title: r.category, skills: [] });
-    map.get(r.category)!.skills.push({ name: r.name, badge: r.badge || r.name.slice(0, 2), color: r.color });
+    map.get(r.category)!.skills.push({
+      name: r.name,
+      badge: r.badge || r.name.slice(0, 2),
+      color: r.color,
+      slug: slugForSkill(r.name, r.icon_slug),
+    });
   }
   return Array.from(map.values());
 }
 
+function fallbackGroups(): Group[] {
+  return skillGroups.map((g) => ({
+    title: g.title,
+    skills: g.skills.map((s) => ({ ...s, slug: slugForSkill(s.name) })),
+  }));
+}
+
+function SkillLogo({ skill }: { skill: SkillItem }) {
+  const [failed, setFailed] = useState(false);
+  const showLogo = skill.slug && !failed;
+
+  return (
+    <span
+      className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-background/70"
+      aria-hidden
+    >
+      {showLogo ? (
+        <img
+          src={skillIconUrl(skill.slug!)}
+          alt=""
+          loading="lazy"
+          width={32}
+          height={32}
+          className="h-8 w-8 object-contain"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <span
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg font-display text-[11px] font-bold text-white"
+          style={{ background: `linear-gradient(135deg, ${skill.color}, ${skill.color}aa)` }}
+        >
+          {skill.badge}
+        </span>
+      )}
+    </span>
+  );
+}
+
 export function Skills() {
   const { data } = useSkills();
-  const groups: Group[] = data && data.length ? groupSkills(data) : skillGroups;
+  const groups: Group[] = data && data.length ? groupSkills(data) : fallbackGroups();
 
   return (
     <Section id="skills" className="bg-surface/60">
@@ -47,28 +93,20 @@ export function Skills() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, margin: "-60px" }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
             >
               {group.skills.map((skill) => (
                 <motion.div
                   key={skill.name}
                   variants={staggerItem}
-                  whileHover={{ scale: 1.03 }}
-                  className="group rounded-2xl border border-border bg-elevated p-5 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_24px_rgba(79,142,247,0.15)]"
+                  whileHover={{ y: -4 }}
+                  className="group flex h-full flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-elevated px-4 py-6 text-center transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_24px_rgba(79,142,247,0.15)]"
                 >
-                  <div className="flex items-center gap-4">
-                    <span
-                      className="inline-flex h-11 w-11 items-center justify-center rounded-xl font-display font-bold text-sm text-white shadow-inner"
-                      style={{ background: `linear-gradient(135deg, ${skill.color}, ${skill.color}aa)` }}
-                      aria-hidden
-                    >
-                      {skill.badge}
-                    </span>
-                    <div>
-                      <div className="font-semibold text-foreground">{skill.name}</div>
-                      <div className="text-xs font-mono text-text-muted uppercase tracking-wider">
-                        {group.title.split(" ")[0]}
-                      </div>
+                  <SkillLogo skill={skill} />
+                  <div className="min-w-0">
+                    <div className="truncate font-semibold text-foreground">{skill.name}</div>
+                    <div className="mt-0.5 text-[11px] font-mono uppercase tracking-wider text-text-muted">
+                      {group.title}
                     </div>
                   </div>
                 </motion.div>

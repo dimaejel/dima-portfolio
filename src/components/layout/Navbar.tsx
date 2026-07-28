@@ -1,15 +1,27 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Download, Menu, X } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, X } from "lucide-react";
 import { navLinks, personalInfo } from "@/data/portfolio";
 import { useSiteProfile } from "@/hooks/use-portfolio";
-import { useMediaUrl } from "@/components/MediaImage";
+import { DownloadCvButton } from "@/components/DownloadCvButton";
+import { useIsAdmin, signOut } from "@/lib/auth";
+import { useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function Navbar() {
   const profile = useSiteProfile();
   const name = profile?.name || personalInfo.name;
   const initials = profile?.initials || personalInfo.initials;
-  const resumeUrl = useMediaUrl(profile?.resume_url);
+  const { isAdmin, signedIn } = useIsAdmin();
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+
+  const handleSignOut = async () => {
+    await qc.cancelQueries();
+    qc.clear();
+    await signOut();
+    navigate({ to: "/auth", replace: true });
+  };
 
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -89,16 +101,29 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-3">
-            {resumeUrl && (
+            <DownloadCvButton
+              resumeValue={profile?.resume_url}
+              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-gradient-brand px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgba(124,58,237,0.6)] transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary/70 disabled:opacity-70"
+            />
+            {signedIn && isAdmin && (
               <a
-                href={resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden sm:inline-flex items-center gap-2 rounded-full bg-gradient-brand px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgba(124,58,237,0.6)] transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary/70"
+                href="/admin"
+                className="hidden sm:inline-flex items-center gap-2 rounded-full border border-border px-3 py-2 text-sm font-medium text-text-secondary hover:border-primary/40 hover:text-primary transition-colors"
               >
-                <Download className="h-4 w-4" />
-                Download CV
+                <LayoutDashboard className="h-4 w-4" /> Admin
               </a>
+            )}
+            {signedIn && (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                title="Sign out of your account"
+                aria-label="Sign out"
+                className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-2 text-sm font-medium text-text-secondary hover:border-red-500/50 hover:text-red-400 transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Sign Out</span>
+              </button>
             )}
             <button
               onClick={() => setOpen((o) => !o)}
@@ -133,6 +158,19 @@ export function Navbar() {
                     {l.label}
                   </motion.a>
                 ))}
+                <DownloadCvButton
+                  resumeValue={profile?.resume_url}
+                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-brand px-3 py-3 text-sm font-semibold text-white sm:hidden disabled:opacity-70"
+                />
+                {signedIn && (
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="mt-1 inline-flex items-center justify-center gap-2 rounded-lg border border-border px-3 py-3 text-sm font-medium text-text-secondary hover:text-red-400"
+                  >
+                    <LogOut className="h-4 w-4" /> Sign Out
+                  </button>
+                )}
               </div>
             </motion.div>
           )}

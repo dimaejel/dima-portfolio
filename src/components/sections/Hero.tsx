@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowDown,
   ArrowUp,
-  Download,
   Github,
   Linkedin,
   Mail,
@@ -12,6 +11,7 @@ import {
 import { personalInfo, navLinks } from "@/data/portfolio";
 import { useSiteProfile, profileStats } from "@/hooks/use-portfolio";
 import { useMediaUrl } from "@/components/MediaImage";
+import { DownloadCvButton } from "@/components/DownloadCvButton";
 
 
 function Typewriter({ words }: { words: string[] }) {
@@ -62,7 +62,6 @@ export function Hero() {
   const githubUrl = profile?.github_url || personalInfo.githubUrl;
   const linkedinUrl = profile?.linkedin_url || personalInfo.linkedinUrl;
   const email = profile?.email || personalInfo.email;
-  const resumeUrl = useMediaUrl(profile?.resume_url);
   const stats = profileStats(profile).length ? profileStats(profile) : personalInfo.stats;
   const avatarUrl = useMediaUrl(profile?.avatar_url);
 
@@ -109,11 +108,10 @@ export function Hero() {
             <a href="#projects" className="inline-flex items-center gap-2 rounded-xl bg-gradient-brand px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_30px_-10px_rgba(124,58,237,0.7)] transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary/70">
               View Projects <ArrowDown className="h-4 w-4" />
             </a>
-            {resumeUrl ? (
-              <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-primary px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/70">
-                <Download className="h-4 w-4" /> Download CV
-              </a>
-            ) : null}
+            <DownloadCvButton
+              resumeValue={profile?.resume_url}
+              className="inline-flex items-center gap-2 rounded-xl border border-primary px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/70 disabled:opacity-70"
+            />
             <a href="#contact" className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-text-secondary transition-colors hover:text-foreground">
               <Mail className="h-4 w-4" /> Contact Me
             </a>

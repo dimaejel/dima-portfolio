@@ -375,6 +375,7 @@ export type Database = {
           color: string
           created_at: string
           display_order: number
+          icon_slug: string
           id: string
           name: string
           updated_at: string
@@ -386,6 +387,7 @@ export type Database = {
           color?: string
           created_at?: string
           display_order?: number
+          icon_slug?: string
           id?: string
           name: string
           updated_at?: string
@@ -397,6 +399,7 @@ export type Database = {
           color?: string
           created_at?: string
           display_order?: number
+          icon_slug?: string
           id?: string
           name?: string
           updated_at?: string

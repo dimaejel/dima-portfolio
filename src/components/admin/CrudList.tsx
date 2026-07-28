@@ -141,43 +141,101 @@ export function CrudList<T extends CrudRow>({
                 {columns.map((c) => (
                   <th key={c.header} className="text-left px-4 py-3 font-medium">{c.header}</th>
                 ))}
+                <th className="text-left px-4 py-3 font-medium">Status</th>
                 <th className="px-4 py-3 text-right font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((row, i) => (
-                <tr key={row.id} className="border-t border-border">
+                <tr key={row.id} className="border-t border-border align-top">
                   {columns.map((c) => (
                     <td key={c.header} className="px-4 py-3 align-top text-foreground">{c.render(row)}</td>
                   ))}
                   <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-1">
-                      <IconBtn title="Move up" onClick={() => reorder(row, -1)} disabled={i === 0}>
-                        <ChevronUp className="h-4 w-4" />
-                      </IconBtn>
-                      <IconBtn title="Move down" onClick={() => reorder(row, 1)} disabled={i === rows.length - 1}>
-                        <ChevronDown className="h-4 w-4" />
-                      </IconBtn>
+                    <div className="flex flex-wrap gap-1.5">
                       {typeof row.visible === "boolean" && (
-                        <IconBtn
-                          title={row.visible ? "Hide" : "Show"}
-                          onClick={() => patch.mutate({ id: row.id, values: { visible: !row.visible } as Partial<T> })}
-                        >
-                          {row.visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 text-text-muted" />}
-                        </IconBtn>
+                        <StatusBadge tone={row.visible ? "success" : "muted"}>
+                          {row.visible ? "Visible" : "Hidden"}
+                        </StatusBadge>
                       )}
-                      <IconBtn title="Edit" onClick={() => setEditing(row)}>
-                        <Pencil className="h-4 w-4" />
-                      </IconBtn>
-                      <IconBtn
-                        title="Delete"
-                        onClick={() => {
-                          if (confirm("Delete this item?")) del.mutate(row.id);
-                        }}
-                        danger
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </IconBtn>
+                      {typeof row.published === "boolean" && (
+                        <StatusBadge tone={row.published ? "success" : "warning"}>
+                          {row.published ? "Published" : "Draft"}
+                        </StatusBadge>
+                      )}
+                      {row.featured === true && <StatusBadge tone="success">Featured</StatusBadge>}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap items-center justify-end gap-1.5">
+                      <ActionButton
+                        icon={<ChevronUp className="h-3.5 w-3.5" />}
+                        label="Up"
+                        tooltip="Move this item up in the display order"
+                        onClick={() => reorder(row, -1)}
+                        disabled={i === 0}
+                        compact
+                      />
+                      <ActionButton
+                        icon={<ChevronDown className="h-3.5 w-3.5" />}
+                        label="Down"
+                        tooltip="Move this item down in the display order"
+                        onClick={() => reorder(row, 1)}
+                        disabled={i === rows.length - 1}
+                        compact
+                      />
+                      {typeof row.visible === "boolean" && (
+                        <ActionButton
+                          icon={row.visible ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                          label={row.visible ? "Hide" : "Show"}
+                          tooltip={
+                            row.visible
+                              ? "Hide this item from the public portfolio"
+                              : "Show this item on the public portfolio"
+                          }
+                          onClick={() =>
+                            patch.mutate({ id: row.id, values: { visible: !row.visible } as Partial<T> })
+                          }
+                        />
+                      )}
+                      {typeof row.published === "boolean" && (
+                        <ActionButton
+                          icon={row.published ? <FileEdit className="h-3.5 w-3.5" /> : <Megaphone className="h-3.5 w-3.5" />}
+                          label={row.published ? "Unpublish" : "Publish"}
+                          tooltip={
+                            row.published
+                              ? "Unpublish — move this item back to draft"
+                              : "Publish this item to the public portfolio"
+                          }
+                          onClick={() =>
+                            patch.mutate({ id: row.id, values: { published: !row.published } as Partial<T> })
+                          }
+                        />
+                      )}
+                      {typeof row.featured === "boolean" && (
+                        <ActionButton
+                          icon={row.featured ? <StarOff className="h-3.5 w-3.5" /> : <Star className="h-3.5 w-3.5" />}
+                          label={row.featured ? "Unfeature" : "Feature"}
+                          tooltip={row.featured ? "Remove from featured" : "Mark as featured"}
+                          onClick={() =>
+                            patch.mutate({ id: row.id, values: { featured: !row.featured } as Partial<T> })
+                          }
+                        />
+                      )}
+                      <ActionButton
+                        icon={<Pencil className="h-3.5 w-3.5" />}
+                        label="Edit"
+                        tooltip="Edit this item"
+                        tone="primary"
+                        onClick={() => setEditing(row)}
+                      />
+                      <ActionButton
+                        icon={<Trash2 className="h-3.5 w-3.5" />}
+                        label="Delete"
+                        tooltip="Delete this item permanently"
+                        tone="danger"
+                        onClick={() => setPendingDelete(row)}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -185,6 +243,7 @@ export function CrudList<T extends CrudRow>({
             </tbody>
           </table>
         </div>
+
       )}
 
       {editing && (

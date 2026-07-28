@@ -78,8 +78,7 @@ export function slugForSkill(name: string, explicit?: string | null): string | n
   return match ? match[1] : null;
 }
 
-/** CDN URL for the official logo, tinted with the skill's brand color. */
-export function skillIconUrl(slug: string, color?: string | null): string {
-  const hex = (color ?? "").replace("#", "").trim();
-  return `https://cdn.simpleicons.org/${encodeURIComponent(slug)}${hex ? `/${hex}` : ""}`;
+/** CDN URL for the official logo in the technology's own brand color. */
+export function skillIconUrl(slug: string): string {
+  return `https://cdn.simpleicons.org/${encodeURIComponent(slug)}`;
 }

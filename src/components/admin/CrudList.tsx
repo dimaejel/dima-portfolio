@@ -259,9 +259,18 @@ export function CrudList<T extends CrudRow>({
           </div>
         </Modal>
       )}
+
+      <ConfirmDialog
+        open={!!pendingDelete}
+        title={`Delete this ${title.replace(/s$/, "").toLowerCase()}?`}
+        description="This item will be permanently removed from your portfolio. This action cannot be undone."
+        onConfirm={() => pendingDelete && del.mutate(pendingDelete.id)}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   );
 }
+
 
 function IconBtn({
   children,

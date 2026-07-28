@@ -56,6 +56,8 @@ export function CrudList<T extends CrudRow>({
   const qc = useQueryClient();
   const q = useQuery({ queryKey, queryFn: fetchAll });
   const [editing, setEditing] = useState<Partial<T> | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<T | null>(null);
+
 
   const invalidate = () => {
     qc.invalidateQueries({ queryKey });

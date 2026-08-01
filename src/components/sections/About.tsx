@@ -1,11 +1,36 @@
 import { personalInfo } from "@/data/portfolio";
-import { useAboutSection } from "@/hooks/use-portfolio";
+import { useAboutSection, useCodeCard } from "@/hooks/use-portfolio";
 import { Reveal, Section, SectionEyebrow } from "./_shared";
 
 type AboutStat = { value: string; label: string };
 
+/** Renders a code-card value with syntax colours appropriate to its type. */
+function CodeValue({ type, value }: { type: string; value: string }) {
+  if (type === "boolean")
+    return <span className="text-[#569cd6]">{value === "true" ? "true" : "false"}</span>;
+  if (type === "number") return <span className="text-[#b5cea8]">{value}</span>;
+  if (type === "raw") return <span className="text-[#4fc1ff]">{value}</span>;
+  if (type === "array") {
+    const items = value.split(",").map((s) => s.trim()).filter(Boolean);
+    return (
+      <>
+        <span className="text-foreground">[</span>
+        {items.map((s, i) => (
+          <span key={s + i}>
+            <span className="text-[#ce9178]">"{s}"</span>
+            {i < items.length - 1 && <span className="text-foreground">, </span>}
+          </span>
+        ))}
+        <span className="text-foreground">]</span>
+      </>
+    );
+  }
+  return <span className="text-[#ce9178]">"{value}"</span>;
+}
+
 export function About() {
   const { data: about } = useAboutSection();
+  const { data: codeLines } = useCodeCard();
 
   const eyebrow = about?.eyebrow || "About Me";
   const heading = about?.heading || "Crafting Code,";
@@ -17,11 +42,8 @@ export function About() {
   const tags = about?.tags?.length ? about.tags : personalInfo.interests;
   const stats: AboutStat[] = Array.isArray(about?.stats) ? (about?.stats as AboutStat[]) : [];
   const codeFile = about?.code_file_name || "developer.ts";
-  const codeName = about?.code_name || personalInfo.name;
-  const codeRole = about?.code_role || "CS Graduate";
-  const codeSkills = about?.code_skills?.length ? about.code_skills : ["Java", "React", "Node.js"];
-  const codeAvailable = about?.code_available ?? true;
-  const codeCoffee = about?.code_coffee || "Infinity";
+  const lines = codeLines ?? [];
+
 
   return (
     <Section id="about">

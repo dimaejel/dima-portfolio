@@ -9,7 +9,7 @@ import {
   User,
 } from "lucide-react";
 import { personalInfo, navLinks } from "@/data/portfolio";
-import { useSiteProfile, profileStats } from "@/hooks/use-portfolio";
+import { useSiteProfile } from "@/hooks/use-portfolio";
 import { useMediaUrl } from "@/components/MediaImage";
 import { DownloadCvButton } from "@/components/DownloadCvButton";
 
@@ -62,7 +62,6 @@ export function Hero() {
   const githubUrl = profile?.github_url || personalInfo.githubUrl;
   const linkedinUrl = profile?.linkedin_url || personalInfo.linkedinUrl;
   const email = profile?.email || personalInfo.email;
-  const stats = profileStats(profile).length ? profileStats(profile) : personalInfo.stats;
   const avatarUrl = useMediaUrl(profile?.avatar_url);
 
 
@@ -123,14 +122,6 @@ export function Hero() {
             <a href={`mailto:${email}`} aria-label="Email" className="text-text-muted hover:text-primary transition-colors"><Mail className="h-5 w-5" /></a>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0, duration: 0.6 }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 max-w-xl">
-            {stats.map((s) => (
-              <div key={s.label} className="rounded-xl border border-border bg-surface px-4 py-3">
-                <div className="font-display font-bold text-foreground text-lg">{s.value}</div>
-                <div className="text-xs text-text-muted">{s.label}</div>
-              </div>
-            ))}
-          </motion.div>
         </div>
 
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }} className="relative mx-auto h-[280px] w-[280px] sm:h-[360px] sm:w-[360px]">

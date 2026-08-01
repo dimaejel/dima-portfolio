@@ -8,7 +8,7 @@ import {
   Briefcase,
   GraduationCap,
   Award,
-  Trophy,
+  FileText,
   Mail,
   LogOut,
   Menu,
@@ -40,12 +40,12 @@ type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?
 const nav: NavItem[] = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
   { to: "/admin/site-profile", label: "Site Profile", icon: User },
+  { to: "/admin/about", label: "About", icon: FileText },
   { to: "/admin/projects", label: "Projects", icon: FolderKanban },
   { to: "/admin/skills", label: "Skills", icon: Sparkles },
   { to: "/admin/experience", label: "Experience", icon: Briefcase },
   { to: "/admin/education", label: "Education", icon: GraduationCap },
   { to: "/admin/certifications", label: "Certifications", icon: Award },
-  { to: "/admin/achievements", label: "Achievements", icon: Trophy },
   { to: "/admin/messages", label: "Messages", icon: Mail },
 ];
 

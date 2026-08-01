@@ -63,39 +63,20 @@ export function About() {
                 <span className="text-[#4fc1ff]">developer</span>{" "}
                 <span className="text-foreground">=</span>{" "}
                 <span className="text-foreground">{"{"}</span>
-                {"\n  "}
-                <span className="text-[#9cdcfe]">name</span>
-                <span className="text-foreground">:</span>{" "}
-                <span className="text-[#ce9178]">"{codeName}"</span>
-                <span className="text-foreground">,</span>
-                {"\n  "}
-                <span className="text-[#9cdcfe]">role</span>
-                <span className="text-foreground">:</span>{" "}
-                <span className="text-[#ce9178]">"{codeRole}"</span>
-                <span className="text-foreground">,</span>
-                {"\n  "}
-                <span className="text-[#9cdcfe]">skills</span>
-                <span className="text-foreground">: [</span>
-                {codeSkills.map((s, i) => (
-                  <span key={s + i}>
-                    <span className="text-[#ce9178]">"{s}"</span>
-                    {i < codeSkills.length - 1 && <span className="text-foreground">, </span>}
+                {lines.map((line, i) => (
+                  <span key={line.id}>
+                    {"\n  "}
+                    <span className="text-[#9cdcfe]">{line.property_name}</span>
+                    <span className="text-foreground">:</span>{" "}
+                    <CodeValue type={line.value_type} value={line.property_value} />
+                    {i < lines.length - 1 && <span className="text-foreground">,</span>}
                   </span>
                 ))}
-                <span className="text-foreground">],</span>
-                {"\n  "}
-                <span className="text-[#9cdcfe]">available</span>
-                <span className="text-foreground">:</span>{" "}
-                <span className="text-[#569cd6]">{String(codeAvailable)}</span>
-                <span className="text-foreground">,</span>
-                {"\n  "}
-                <span className="text-[#9cdcfe]">coffee</span>
-                <span className="text-foreground">:</span>{" "}
-                <span className="text-[#4fc1ff]">{codeCoffee}</span>
                 {"\n"}
                 <span className="text-foreground">{"};"}</span>
               </code>
             </pre>
+
           </div>
           {stats.length > 0 && (
             <div className="grid grid-cols-2 gap-4">

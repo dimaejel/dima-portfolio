@@ -21,6 +21,7 @@ import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminExperienceRouteImport } from './routes/_authenticated/admin.experience'
 import { Route as AuthenticatedAdminEducationRouteImport } from './routes/_authenticated/admin.education'
 import { Route as AuthenticatedAdminCertificationsRouteImport } from './routes/_authenticated/admin.certifications'
+import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -88,11 +89,17 @@ const AuthenticatedAdminCertificationsRoute =
     path: '/certifications',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAboutRoute = AuthenticatedAdminAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/admin/education': typeof AuthenticatedAdminEducationRoute
   '/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/admin/education': typeof AuthenticatedAdminEducationRoute
   '/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
   '/_authenticated/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/_authenticated/admin/education': typeof AuthenticatedAdminEducationRoute
   '/_authenticated/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin'
+    | '/admin/about'
     | '/admin/certifications'
     | '/admin/education'
     | '/admin/experience'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/admin/about'
     | '/admin/certifications'
     | '/admin/education'
     | '/admin/experience'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/admin'
+    | '/_authenticated/admin/about'
     | '/_authenticated/admin/certifications'
     | '/_authenticated/admin/education'
     | '/_authenticated/admin/experience'
@@ -263,10 +275,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCertificationsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/about': {
+      id: '/_authenticated/admin/about'
+      path: '/about'
+      fullPath: '/admin/about'
+      preLoaderRoute: typeof AuthenticatedAdminAboutRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAboutRoute: typeof AuthenticatedAdminAboutRoute
   AuthenticatedAdminCertificationsRoute: typeof AuthenticatedAdminCertificationsRoute
   AuthenticatedAdminEducationRoute: typeof AuthenticatedAdminEducationRoute
   AuthenticatedAdminExperienceRoute: typeof AuthenticatedAdminExperienceRoute
@@ -278,6 +298,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAboutRoute: AuthenticatedAdminAboutRoute,
   AuthenticatedAdminCertificationsRoute: AuthenticatedAdminCertificationsRoute,
   AuthenticatedAdminEducationRoute: AuthenticatedAdminEducationRoute,
   AuthenticatedAdminExperienceRoute: AuthenticatedAdminExperienceRoute,

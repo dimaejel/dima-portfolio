@@ -91,16 +91,12 @@ function AboutAdmin() {
         </Field>
 
         <Field label="Code card — file name"><AdminInput value={form.code_file_name} onChange={(e) => upd("code_file_name", e.target.value)} /></Field>
-        <Field label="Code card — name"><AdminInput value={form.code_name} onChange={(e) => upd("code_name", e.target.value)} /></Field>
-        <Field label="Code card — role"><AdminInput value={form.code_role} onChange={(e) => upd("code_role", e.target.value)} /></Field>
-        <Field label="Code card — skills (comma-separated)"><AdminInput value={form.skillsText} onChange={(e) => upd("skillsText", e.target.value)} /></Field>
-        <Field label="Code card — coffee value"><AdminInput value={form.code_coffee} onChange={(e) => upd("code_coffee", e.target.value)} /></Field>
-        <Field label="Code card — available">
-          <label className="flex items-center gap-2 text-sm text-text-secondary">
-            <input type="checkbox" checked={form.code_available} onChange={(e) => upd("code_available", e.target.checked)} />
-            available: true
-          </label>
+        <Field label="Code card — properties" wide>
+          <p className="text-sm text-text-secondary">
+            The individual lines of the code card are managed on the <strong className="text-foreground">About Code Card</strong> page.
+          </p>
         </Field>
+
       </div>
     </div>
   );

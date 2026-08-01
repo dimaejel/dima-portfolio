@@ -7,6 +7,7 @@ import {
   fetchEducation,
   fetchCertifications,
   fetchAboutSection,
+  fetchCodeCard,
   qk,
   type SiteProfile,
 } from "@/lib/cms";
@@ -28,6 +29,8 @@ export const useCertificationsQ = () =>
   useQuery({ queryKey: qk.certifications, queryFn: () => fetchCertifications(false) });
 export const useAboutSection = () =>
   useQuery({ queryKey: qk.about, queryFn: fetchAboutSection });
+export const useCodeCard = () =>
+  useQuery({ queryKey: qk.codeCard, queryFn: () => fetchCodeCard(false) });
 
 export type SiteStat = { label: string; value: string };
 

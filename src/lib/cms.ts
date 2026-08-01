@@ -8,6 +8,7 @@ export type Experience = Tables<"experience">;
 export type Education = Tables<"education">;
 export type Certification = Tables<"certifications">;
 export type AboutSection = Tables<"about_section">;
+export type CodeCardProp = Tables<"about_code_card">;
 export type ContactMessage = Tables<"contact_messages">;
 
 export const qk = {
@@ -23,6 +24,8 @@ export const qk = {
   certifications: ["certifications"] as const,
   certificationsAll: ["certifications", "all"] as const,
   about: ["about_section"] as const,
+  codeCard: ["about_code_card"] as const,
+  codeCardAll: ["about_code_card", "all"] as const,
   messages: ["contact_messages"] as const,
   stats: ["admin", "stats"] as const,
 };
@@ -52,6 +55,7 @@ export const fetchSkills = (all = false) => list<Skill>("skills", !all);
 export const fetchExperience = (all = false) => list<Experience>("experience", !all);
 export const fetchEducation = (all = false) => list<Education>("education", !all);
 export const fetchCertifications = (all = false) => list<Certification>("certifications", !all);
+export const fetchCodeCard = (all = false) => list<CodeCardProp>("about_code_card", !all);
 
 export async function fetchAboutSection(): Promise<AboutSection | null> {
   const { data, error } = await supabase.from("about_section").select("*").eq("id", 1).maybeSingle();

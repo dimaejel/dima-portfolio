@@ -21,6 +21,7 @@ import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminExperienceRouteImport } from './routes/_authenticated/admin.experience'
 import { Route as AuthenticatedAdminEducationRouteImport } from './routes/_authenticated/admin.education'
 import { Route as AuthenticatedAdminCertificationsRouteImport } from './routes/_authenticated/admin.certifications'
+import { Route as AuthenticatedAdminAboutCodeCardRouteImport } from './routes/_authenticated/admin.about-code-card'
 import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
 
 const AuthRoute = AuthRouteImport.update({
@@ -89,6 +90,12 @@ const AuthenticatedAdminCertificationsRoute =
     path: '/certifications',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAboutCodeCardRoute =
+  AuthenticatedAdminAboutCodeCardRouteImport.update({
+    id: '/about-code-card',
+    path: '/about-code-card',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAboutRoute = AuthenticatedAdminAboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -100,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/admin/about': typeof AuthenticatedAdminAboutRoute
+  '/admin/about-code-card': typeof AuthenticatedAdminAboutCodeCardRoute
   '/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/admin/education': typeof AuthenticatedAdminEducationRoute
   '/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -113,6 +121,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin/about': typeof AuthenticatedAdminAboutRoute
+  '/admin/about-code-card': typeof AuthenticatedAdminAboutCodeCardRoute
   '/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/admin/education': typeof AuthenticatedAdminEducationRoute
   '/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -129,6 +138,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
+  '/_authenticated/admin/about-code-card': typeof AuthenticatedAdminAboutCodeCardRoute
   '/_authenticated/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/_authenticated/admin/education': typeof AuthenticatedAdminEducationRoute
   '/_authenticated/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/admin'
     | '/admin/about'
+    | '/admin/about-code-card'
     | '/admin/certifications'
     | '/admin/education'
     | '/admin/experience'
@@ -158,6 +169,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin/about'
+    | '/admin/about-code-card'
     | '/admin/certifications'
     | '/admin/education'
     | '/admin/experience'
@@ -173,6 +185,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/admin'
     | '/_authenticated/admin/about'
+    | '/_authenticated/admin/about-code-card'
     | '/_authenticated/admin/certifications'
     | '/_authenticated/admin/education'
     | '/_authenticated/admin/experience'
@@ -275,6 +288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCertificationsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/about-code-card': {
+      id: '/_authenticated/admin/about-code-card'
+      path: '/about-code-card'
+      fullPath: '/admin/about-code-card'
+      preLoaderRoute: typeof AuthenticatedAdminAboutCodeCardRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/about': {
       id: '/_authenticated/admin/about'
       path: '/about'
@@ -287,6 +307,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAboutRoute: typeof AuthenticatedAdminAboutRoute
+  AuthenticatedAdminAboutCodeCardRoute: typeof AuthenticatedAdminAboutCodeCardRoute
   AuthenticatedAdminCertificationsRoute: typeof AuthenticatedAdminCertificationsRoute
   AuthenticatedAdminEducationRoute: typeof AuthenticatedAdminEducationRoute
   AuthenticatedAdminExperienceRoute: typeof AuthenticatedAdminExperienceRoute
@@ -299,6 +320,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAboutRoute: AuthenticatedAdminAboutRoute,
+  AuthenticatedAdminAboutCodeCardRoute: AuthenticatedAdminAboutCodeCardRoute,
   AuthenticatedAdminCertificationsRoute: AuthenticatedAdminCertificationsRoute,
   AuthenticatedAdminEducationRoute: AuthenticatedAdminEducationRoute,
   AuthenticatedAdminExperienceRoute: AuthenticatedAdminExperienceRoute,

@@ -4,6 +4,7 @@ import {
   ArrowDown,
   ArrowUp,
   Github,
+  GraduationCap,
   Linkedin,
   Mail,
   User,
@@ -111,10 +112,28 @@ export function Hero() {
               resumeValue={profile?.resume_url}
               className="inline-flex items-center gap-2 rounded-xl border border-primary px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/70 disabled:opacity-70"
             />
-            <a href="#contact" className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-text-secondary transition-colors hover:text-foreground">
-              <Mail className="h-4 w-4" /> Contact Me
-            </a>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9, duration: 0.6 }}
+            className="pt-1"
+          >
+            <div
+              aria-label="Lebanese University, Faculty of Science"
+              className="inline-flex items-center gap-3 rounded-xl border border-primary/25 bg-surface/60 px-4 py-2.5 backdrop-blur shadow-[0_10px_40px_-20px_rgba(124,58,237,0.8)]"
+            >
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-primary/30 bg-primary/10 text-primary">
+                <GraduationCap className="h-5 w-5" />
+              </span>
+              <span className="leading-tight">
+                <span className="block text-sm font-semibold text-foreground">Lebanese University</span>
+                <span className="block text-xs text-text-secondary">Faculty of Science</span>
+              </span>
+            </div>
+          </motion.div>
+
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.95, duration: 0.6 }} className="flex items-center gap-5 pt-1">
             <a href={githubUrl} aria-label="GitHub" className="text-text-muted hover:text-primary transition-colors"><Github className="h-5 w-5" /></a>

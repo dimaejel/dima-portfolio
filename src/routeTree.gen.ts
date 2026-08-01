@@ -21,7 +21,6 @@ import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminExperienceRouteImport } from './routes/_authenticated/admin.experience'
 import { Route as AuthenticatedAdminEducationRouteImport } from './routes/_authenticated/admin.education'
 import { Route as AuthenticatedAdminCertificationsRouteImport } from './routes/_authenticated/admin.certifications'
-import { Route as AuthenticatedAdminAchievementsRouteImport } from './routes/_authenticated/admin.achievements'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -89,18 +88,11 @@ const AuthenticatedAdminCertificationsRoute =
     path: '/certifications',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const AuthenticatedAdminAchievementsRoute =
-  AuthenticatedAdminAchievementsRouteImport.update({
-    id: '/achievements',
-    path: '/achievements',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/admin/achievements': typeof AuthenticatedAdminAchievementsRoute
   '/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/admin/education': typeof AuthenticatedAdminEducationRoute
   '/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -113,7 +105,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/admin/achievements': typeof AuthenticatedAdminAchievementsRoute
   '/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/admin/education': typeof AuthenticatedAdminEducationRoute
   '/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -129,7 +120,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/_authenticated/admin/achievements': typeof AuthenticatedAdminAchievementsRoute
   '/_authenticated/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/_authenticated/admin/education': typeof AuthenticatedAdminEducationRoute
   '/_authenticated/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -145,7 +135,6 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin'
-    | '/admin/achievements'
     | '/admin/certifications'
     | '/admin/education'
     | '/admin/experience'
@@ -158,7 +147,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/admin/achievements'
     | '/admin/certifications'
     | '/admin/education'
     | '/admin/experience'
@@ -173,7 +161,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/admin'
-    | '/_authenticated/admin/achievements'
     | '/_authenticated/admin/certifications'
     | '/_authenticated/admin/education'
     | '/_authenticated/admin/experience'
@@ -276,18 +263,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCertificationsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/_authenticated/admin/achievements': {
-      id: '/_authenticated/admin/achievements'
-      path: '/achievements'
-      fullPath: '/admin/achievements'
-      preLoaderRoute: typeof AuthenticatedAdminAchievementsRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
-  AuthenticatedAdminAchievementsRoute: typeof AuthenticatedAdminAchievementsRoute
   AuthenticatedAdminCertificationsRoute: typeof AuthenticatedAdminCertificationsRoute
   AuthenticatedAdminEducationRoute: typeof AuthenticatedAdminEducationRoute
   AuthenticatedAdminExperienceRoute: typeof AuthenticatedAdminExperienceRoute
@@ -299,7 +278,6 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
-  AuthenticatedAdminAchievementsRoute: AuthenticatedAdminAchievementsRoute,
   AuthenticatedAdminCertificationsRoute: AuthenticatedAdminCertificationsRoute,
   AuthenticatedAdminEducationRoute: AuthenticatedAdminEducationRoute,
   AuthenticatedAdminExperienceRoute: AuthenticatedAdminExperienceRoute,
@@ -332,13 +310,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

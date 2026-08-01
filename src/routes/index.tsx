@@ -5,7 +5,6 @@ import { Hero, BackToTop } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { Skills } from "@/components/sections/Skills";
 import { Projects } from "@/components/sections/Projects";
-import { Education } from "@/components/sections/Education";
 import { ExperienceSection } from "@/components/sections/Experience";
 import { Certifications } from "@/components/sections/Certifications";
 import { Contact } from "@/components/sections/Contact";
@@ -42,7 +41,6 @@ function Index() {
         <About />
         <Skills />
         <Projects />
-        <Education />
         <ExperienceSection />
         <Certifications />
         <Contact />

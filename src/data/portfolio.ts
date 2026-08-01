@@ -223,39 +223,6 @@ export const certifications = [
   { title: "CS50: Introduction to Computer Science", issuer: "Harvard/edX", date: "2022", link: "#", gradient: "from-rose-500 to-pink-500" },
 ];
 
-export const achievements = [
-  {
-    title: "Academic Excellence",
-    icon: GraduationCap,
-    items: [
-      "Dean's List / Academic Honor (Year)",
-      "Highest GPA in [Subject] course",
-      "Top [N]% in graduating class",
-      "[Competition / Project Award]",
-    ],
-  },
-  {
-    title: "Technical Accomplishments",
-    icon: Code2,
-    items: [
-      "Completed 5+ self-directed projects",
-      "Contributed to open-source repository",
-      "Solved 50+ algorithmic problems on LeetCode/HackerRank",
-      "Built full-stack application independently",
-    ],
-  },
-  {
-    title: "Personal Milestones",
-    icon: Star,
-    items: [
-      "Delivered freelance project under deadline",
-      "Self-taught React and Node.js in [X] months",
-      "Organized campus coding workshop",
-      "Mentored [N] junior students",
-    ],
-  },
-];
-
 export const categoryIcons = {
   Web: Globe,
   Desktop: Code2,

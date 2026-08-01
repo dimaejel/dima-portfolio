@@ -21,7 +21,7 @@ import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminExperienceRouteImport } from './routes/_authenticated/admin.experience'
 import { Route as AuthenticatedAdminEducationRouteImport } from './routes/_authenticated/admin.education'
 import { Route as AuthenticatedAdminCertificationsRouteImport } from './routes/_authenticated/admin.certifications'
-import { Route as AuthenticatedAdminAchievementsRouteImport } from './routes/_authenticated/admin.achievements'
+import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -89,18 +89,17 @@ const AuthenticatedAdminCertificationsRoute =
     path: '/certifications',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const AuthenticatedAdminAchievementsRoute =
-  AuthenticatedAdminAchievementsRouteImport.update({
-    id: '/achievements',
-    path: '/achievements',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
+const AuthenticatedAdminAboutRoute = AuthenticatedAdminAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/admin/achievements': typeof AuthenticatedAdminAchievementsRoute
+  '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/admin/education': typeof AuthenticatedAdminEducationRoute
   '/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -113,7 +112,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/admin/achievements': typeof AuthenticatedAdminAchievementsRoute
+  '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/admin/education': typeof AuthenticatedAdminEducationRoute
   '/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -129,7 +128,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/_authenticated/admin/achievements': typeof AuthenticatedAdminAchievementsRoute
+  '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
   '/_authenticated/admin/certifications': typeof AuthenticatedAdminCertificationsRoute
   '/_authenticated/admin/education': typeof AuthenticatedAdminEducationRoute
   '/_authenticated/admin/experience': typeof AuthenticatedAdminExperienceRoute
@@ -145,7 +144,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin'
-    | '/admin/achievements'
+    | '/admin/about'
     | '/admin/certifications'
     | '/admin/education'
     | '/admin/experience'
@@ -158,7 +157,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/admin/achievements'
+    | '/admin/about'
     | '/admin/certifications'
     | '/admin/education'
     | '/admin/experience'
@@ -173,7 +172,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/admin'
-    | '/_authenticated/admin/achievements'
+    | '/_authenticated/admin/about'
     | '/_authenticated/admin/certifications'
     | '/_authenticated/admin/education'
     | '/_authenticated/admin/experience'
@@ -276,18 +275,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCertificationsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/_authenticated/admin/achievements': {
-      id: '/_authenticated/admin/achievements'
-      path: '/achievements'
-      fullPath: '/admin/achievements'
-      preLoaderRoute: typeof AuthenticatedAdminAchievementsRouteImport
+    '/_authenticated/admin/about': {
+      id: '/_authenticated/admin/about'
+      path: '/about'
+      fullPath: '/admin/about'
+      preLoaderRoute: typeof AuthenticatedAdminAboutRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
-  AuthenticatedAdminAchievementsRoute: typeof AuthenticatedAdminAchievementsRoute
+  AuthenticatedAdminAboutRoute: typeof AuthenticatedAdminAboutRoute
   AuthenticatedAdminCertificationsRoute: typeof AuthenticatedAdminCertificationsRoute
   AuthenticatedAdminEducationRoute: typeof AuthenticatedAdminEducationRoute
   AuthenticatedAdminExperienceRoute: typeof AuthenticatedAdminExperienceRoute
@@ -299,7 +298,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
-  AuthenticatedAdminAchievementsRoute: AuthenticatedAdminAchievementsRoute,
+  AuthenticatedAdminAboutRoute: AuthenticatedAdminAboutRoute,
   AuthenticatedAdminCertificationsRoute: AuthenticatedAdminCertificationsRoute,
   AuthenticatedAdminEducationRoute: AuthenticatedAdminEducationRoute,
   AuthenticatedAdminExperienceRoute: AuthenticatedAdminExperienceRoute,

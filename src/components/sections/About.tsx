@@ -1,47 +1,43 @@
 import { personalInfo } from "@/data/portfolio";
-import { useSiteProfile } from "@/hooks/use-portfolio";
+import { useAboutSection } from "@/hooks/use-portfolio";
 import { Reveal, Section, SectionEyebrow } from "./_shared";
 
+type AboutStat = { value: string; label: string };
+
 export function About() {
-  const profile = useSiteProfile();
-  const name = profile?.name || personalInfo.name;
-  const bio = profile?.bio || null;
-  const interests = profile?.interests?.length ? profile.interests : personalInfo.interests;
+  const { data: about } = useAboutSection();
+
+  const eyebrow = about?.eyebrow || "About Me";
+  const heading = about?.heading || "Crafting Code,";
+  const headingAccent = about?.heading_accent || "Solving Problems.";
+  const paragraphs = (about?.description || "")
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  const tags = about?.tags?.length ? about.tags : personalInfo.interests;
+  const stats: AboutStat[] = Array.isArray(about?.stats) ? (about?.stats as AboutStat[]) : [];
+  const codeFile = about?.code_file_name || "developer.ts";
+  const codeName = about?.code_name || personalInfo.name;
+  const codeRole = about?.code_role || "CS Graduate";
+  const codeSkills = about?.code_skills?.length ? about.code_skills : ["Java", "React", "Node.js"];
+  const codeAvailable = about?.code_available ?? true;
+  const codeCoffee = about?.code_coffee || "Infinity";
+
   return (
     <Section id="about">
       <div className="grid lg:grid-cols-2 gap-12 items-start">
         <Reveal className="space-y-6">
-          <SectionEyebrow>About Me</SectionEyebrow>
+          <SectionEyebrow>{eyebrow}</SectionEyebrow>
           <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-foreground">
-            Crafting Code, <span className="text-gradient">Solving Problems.</span>
+            {heading} <span className="text-gradient">{headingAccent}</span>
           </h2>
           <div className="space-y-4 text-text-secondary leading-relaxed">
-            {bio ? (
-              <p>{bio}</p>
-            ) : (
-              <>
-                <p>
-                  I'm a Computer Science graduate with a deep passion for software development
-                  and technology. My academic journey has equipped me with strong foundations in
-                  algorithms, data structures, software engineering principles, and full-stack
-                  development.
-                </p>
-                <p>
-                  I love breaking down complex problems into elegant solutions. Whether it's
-                  building efficient backend systems, designing intuitive web interfaces, or
-                  modeling relational databases — I approach every challenge with curiosity and
-                  discipline.
-                </p>
-                <p>
-                  My goal is to join a forward-thinking team where I can contribute meaningful
-                  code from day one, grow as an engineer, and help build products that make a
-                  real difference.
-                </p>
-              </>
-            )}
+            {paragraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
           </div>
           <div className="flex flex-wrap gap-2 pt-2">
-            {interests.map((tag) => (
+            {tags.map((tag) => (
               <span
                 key={tag}
                 className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
@@ -59,7 +55,7 @@ export function About() {
               <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
               <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
               <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
-              <span className="ml-3 text-xs font-mono text-text-muted">developer.ts</span>
+              <span className="ml-3 text-xs font-mono text-text-muted">{codeFile}</span>
             </div>
             <pre className="px-5 py-5 text-sm leading-relaxed font-mono overflow-x-auto">
               <code>
@@ -70,46 +66,47 @@ export function About() {
                 {"\n  "}
                 <span className="text-[#9cdcfe]">name</span>
                 <span className="text-foreground">:</span>{" "}
-                <span className="text-[#ce9178]">"{name}"</span>
+                <span className="text-[#ce9178]">"{codeName}"</span>
                 <span className="text-foreground">,</span>
                 {"\n  "}
                 <span className="text-[#9cdcfe]">role</span>
                 <span className="text-foreground">:</span>{" "}
-                <span className="text-[#ce9178]">"CS Graduate"</span>
+                <span className="text-[#ce9178]">"{codeRole}"</span>
                 <span className="text-foreground">,</span>
                 {"\n  "}
                 <span className="text-[#9cdcfe]">skills</span>
                 <span className="text-foreground">: [</span>
-                <span className="text-[#ce9178]">"Java"</span>
-                <span className="text-foreground">, </span>
-                <span className="text-[#ce9178]">"React"</span>
-                <span className="text-foreground">, </span>
-                <span className="text-[#ce9178]">"Node.js"</span>
+                {codeSkills.map((s, i) => (
+                  <span key={s + i}>
+                    <span className="text-[#ce9178]">"{s}"</span>
+                    {i < codeSkills.length - 1 && <span className="text-foreground">, </span>}
+                  </span>
+                ))}
                 <span className="text-foreground">],</span>
                 {"\n  "}
                 <span className="text-[#9cdcfe]">available</span>
                 <span className="text-foreground">:</span>{" "}
-                <span className="text-[#569cd6]">true</span>
+                <span className="text-[#569cd6]">{String(codeAvailable)}</span>
                 <span className="text-foreground">,</span>
                 {"\n  "}
                 <span className="text-[#9cdcfe]">coffee</span>
                 <span className="text-foreground">:</span>{" "}
-                <span className="text-[#4fc1ff]">Infinity</span>
+                <span className="text-[#4fc1ff]">{codeCoffee}</span>
                 {"\n"}
                 <span className="text-foreground">{"};"}</span>
               </code>
             </pre>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-border bg-surface p-5">
-              <div className="font-display font-extrabold text-3xl text-gradient">4+</div>
-              <div className="text-sm text-text-secondary mt-1">Projects Completed</div>
+          {stats.length > 0 && (
+            <div className="grid grid-cols-2 gap-4">
+              {stats.map((s, i) => (
+                <div key={s.label + i} className="rounded-2xl border border-border bg-surface p-5">
+                  <div className="font-display font-extrabold text-3xl text-gradient">{s.value}</div>
+                  <div className="text-sm text-text-secondary mt-1">{s.label}</div>
+                </div>
+              ))}
             </div>
-            <div className="rounded-2xl border border-border bg-surface p-5">
-              <div className="font-display font-extrabold text-3xl text-gradient">10+</div>
-              <div className="text-sm text-text-secondary mt-1">Technologies</div>
-            </div>
-          </div>
+          )}
         </Reveal>
       </div>
     </Section>

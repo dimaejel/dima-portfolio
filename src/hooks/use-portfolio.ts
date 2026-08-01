@@ -6,7 +6,7 @@ import {
   fetchExperience,
   fetchEducation,
   fetchCertifications,
-  fetchAchievements,
+  fetchAboutSection,
   qk,
   type SiteProfile,
 } from "@/lib/cms";
@@ -26,8 +26,8 @@ export const useEducationQ = () =>
   useQuery({ queryKey: qk.education, queryFn: () => fetchEducation(false) });
 export const useCertificationsQ = () =>
   useQuery({ queryKey: qk.certifications, queryFn: () => fetchCertifications(false) });
-export const useAchievementsQ = () =>
-  useQuery({ queryKey: qk.achievements, queryFn: () => fetchAchievements(false) });
+export const useAboutSection = () =>
+  useQuery({ queryKey: qk.about, queryFn: fetchAboutSection });
 
 export type SiteStat = { label: string; value: string };
 

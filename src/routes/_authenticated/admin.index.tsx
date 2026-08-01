@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { qk } from "@/lib/cms";
 import {
-  FolderKanban, Sparkles, Briefcase, GraduationCap, Award, Trophy, Mail, MailOpen,
+  FolderKanban, Sparkles, Briefcase, GraduationCap, Award, Mail, MailOpen,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
@@ -22,7 +22,7 @@ function Overview() {
   const q = useQuery({
     queryKey: qk.stats,
     queryFn: async () => {
-      const [projects, featured, skills, experience, education, certifications, achievements, messages, unread] =
+      const [projects, featured, skills, experience, education, certifications, messages, unread] =
         await Promise.all([
           countFrom("projects"),
           countFrom("projects", (b) => b.eq("featured", true)),
@@ -30,11 +30,10 @@ function Overview() {
           countFrom("experience"),
           countFrom("education"),
           countFrom("certifications"),
-          countFrom("achievements"),
           countFrom("contact_messages"),
           countFrom("contact_messages", (b) => b.eq("read", false)),
         ]);
-      return { projects, featured, skills, experience, education, certifications, achievements, messages, unread };
+      return { projects, featured, skills, experience, education, certifications, messages, unread };
     },
   });
 
@@ -44,7 +43,6 @@ function Overview() {
     { label: "Experience", value: q.data?.experience, icon: Briefcase },
     { label: "Education", value: q.data?.education, icon: GraduationCap },
     { label: "Certifications", value: q.data?.certifications, icon: Award },
-    { label: "Achievements", value: q.data?.achievements, icon: Trophy },
     { label: "Messages", value: q.data?.messages, sub: `${q.data?.unread ?? 0} unread`, icon: q.data?.unread ? Mail : MailOpen },
   ];
 

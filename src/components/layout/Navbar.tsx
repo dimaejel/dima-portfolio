@@ -80,7 +80,7 @@ export function Navbar() {
           </a>
 
           <nav className="hidden lg:flex items-center gap-1">
-            {navLinks.slice(0, 6).map((l) => {
+            {[...navLinks.slice(0, 6), navLinks[navLinks.length - 1]].map((l) => {
               const isActive = active === l.href.slice(1);
               return (
                 <a

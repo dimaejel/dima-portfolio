@@ -8,6 +8,7 @@ export type Experience = Tables<"experience">;
 export type Education = Tables<"education">;
 export type Certification = Tables<"certifications">;
 export type AboutSection = Tables<"about_section">;
+export type CodeCardProp = Tables<"about_code_card">;
 export type ContactMessage = Tables<"contact_messages">;
 
 export const qk = {
@@ -23,6 +24,8 @@ export const qk = {
   certifications: ["certifications"] as const,
   certificationsAll: ["certifications", "all"] as const,
   about: ["about_section"] as const,
+  codeCard: ["about_code_card"] as const,
+  codeCardAll: ["about_code_card", "all"] as const,
   messages: ["contact_messages"] as const,
   stats: ["admin", "stats"] as const,
 };

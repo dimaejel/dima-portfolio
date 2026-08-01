@@ -55,6 +55,7 @@ export const fetchSkills = (all = false) => list<Skill>("skills", !all);
 export const fetchExperience = (all = false) => list<Experience>("experience", !all);
 export const fetchEducation = (all = false) => list<Education>("education", !all);
 export const fetchCertifications = (all = false) => list<Certification>("certifications", !all);
+export const fetchCodeCard = (all = false) => list<CodeCardProp>("about_code_card", !all);
 
 export async function fetchAboutSection(): Promise<AboutSection | null> {
   const { data, error } = await supabase.from("about_section").select("*").eq("id", 1).maybeSingle();

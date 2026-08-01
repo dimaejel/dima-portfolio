@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      about_code_card: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          property_name: string
+          property_value: string
+          updated_at: string
+          value_type: string
+          visible: boolean
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          property_name: string
+          property_value?: string
+          updated_at?: string
+          value_type?: string
+          visible?: boolean
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          property_name?: string
+          property_value?: string
+          updated_at?: string
+          value_type?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
       about_section: {
         Row: {
           code_available: boolean

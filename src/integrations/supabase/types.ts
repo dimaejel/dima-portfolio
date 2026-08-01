@@ -14,36 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      achievements: {
+      about_section: {
         Row: {
-          category: string
-          created_at: string
-          display_order: number
-          icon: string
-          id: string
-          items: string[]
+          code_available: boolean
+          code_coffee: string
+          code_file_name: string
+          code_name: string
+          code_role: string
+          code_skills: string[]
+          description: string
+          eyebrow: string
+          heading: string
+          heading_accent: string
+          id: number
+          stats: Json
+          tags: string[]
           updated_at: string
-          visible: boolean
         }
         Insert: {
-          category: string
-          created_at?: string
-          display_order?: number
-          icon?: string
-          id?: string
-          items?: string[]
+          code_available?: boolean
+          code_coffee?: string
+          code_file_name?: string
+          code_name?: string
+          code_role?: string
+          code_skills?: string[]
+          description?: string
+          eyebrow?: string
+          heading?: string
+          heading_accent?: string
+          id?: number
+          stats?: Json
+          tags?: string[]
           updated_at?: string
-          visible?: boolean
         }
         Update: {
-          category?: string
-          created_at?: string
-          display_order?: number
-          icon?: string
-          id?: string
-          items?: string[]
+          code_available?: boolean
+          code_coffee?: string
+          code_file_name?: string
+          code_name?: string
+          code_role?: string
+          code_skills?: string[]
+          description?: string
+          eyebrow?: string
+          heading?: string
+          heading_accent?: string
+          id?: number
+          stats?: Json
+          tags?: string[]
           updated_at?: string
-          visible?: boolean
         }
         Relationships: []
       }

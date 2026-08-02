@@ -4,7 +4,6 @@ import {
   ArrowDown,
   ArrowUp,
   Github,
-  GraduationCap,
   Linkedin,
   Mail,
   User,

@@ -4,6 +4,7 @@ import type { Tables } from "@/integrations/supabase/types";
 export type SiteProfile = Tables<"site_profile">;
 export type Project = Tables<"projects">;
 export type Skill = Tables<"skills">;
+export type SkillCategory = Tables<"skill_categories">;
 export type Experience = Tables<"experience">;
 export type Education = Tables<"education">;
 export type Certification = Tables<"certifications">;
@@ -17,6 +18,8 @@ export const qk = {
   projectsAll: ["projects", "all"] as const,
   skills: ["skills"] as const,
   skillsAll: ["skills", "all"] as const,
+  skillCategories: ["skill_categories"] as const,
+  skillCategoriesAll: ["skill_categories", "all"] as const,
   experience: ["experience"] as const,
   experienceAll: ["experience", "all"] as const,
   education: ["education"] as const,
@@ -52,6 +55,8 @@ export async function fetchProject(id: string): Promise<Project | null> {
   return data;
 }
 export const fetchSkills = (all = false) => list<Skill>("skills", !all);
+export const fetchSkillCategories = (all = false) =>
+  list<SkillCategory>("skill_categories", !all);
 export const fetchExperience = (all = false) => list<Experience>("experience", !all);
 export const fetchEducation = (all = false) => list<Education>("education", !all);
 export const fetchCertifications = (all = false) => list<Certification>("certifications", !all);

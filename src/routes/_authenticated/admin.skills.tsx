@@ -1,7 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Tags } from "lucide-react";
+import { toast } from "sonner";
 import { CrudList } from "@/components/admin/CrudList";
+import { CategoryCombobox } from "@/components/admin/CategoryCombobox";
 import { AdminInput, AdminLabel } from "@/components/admin/PageHeader";
-import { fetchSkills, qk, type Skill } from "@/lib/cms";
+import { supabase } from "@/integrations/supabase/client";
+import { fetchSkills, fetchSkillCategories, qk, type Skill } from "@/lib/cms";
 import { slugForSkill, skillIconUrl } from "@/lib/skill-icons";
 
 export const Route = createFileRoute("/_authenticated/admin/skills")({
@@ -9,7 +14,46 @@ export const Route = createFileRoute("/_authenticated/admin/skills")({
 });
 
 function SkillsAdmin() {
+  const qc = useQueryClient();
+  const categoriesQ = useQuery({
+    queryKey: qk.skillCategoriesAll,
+    queryFn: () => fetchSkillCategories(true),
+  });
+  const categories = (categoriesQ.data ?? []).map((c) => c.name);
+
+  const createCategory = useMutation({
+    mutationFn: async (name: string) => {
+      const nextOrder =
+        (categoriesQ.data ?? []).reduce((m, c) => Math.max(m, c.display_order), 0) + 10;
+      const { error } = await supabase
+        .from("skill_categories")
+        .insert({ name, display_order: nextOrder });
+      if (error && error.code !== "23505") throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: qk.skillCategoriesAll });
+      qc.invalidateQueries({ queryKey: qk.skillCategories });
+    },
+    onError: (e) => toast.error((e as Error).message),
+  });
+
+  const onCategoryChange = (name: string) => {
+    if (name && !categories.some((c) => c.toLowerCase() === name.toLowerCase())) {
+      createCategory.mutate(name);
+      toast.success(`Category "${name}" created.`);
+    }
+  };
+
   return (
+    <>
+      <div className="mb-4 flex justify-end">
+        <Link
+          to="/admin/skill-categories"
+          className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+        >
+          <Tags className="h-4 w-4" /> Manage Skill Categories
+        </Link>
+      </div>
     <CrudList<Skill>
       title="Skills"
       description="Technologies grouped by category."
@@ -17,7 +61,7 @@ function SkillsAdmin() {
       queryKey={qk.skillsAll}
       fetchAll={() => fetchSkills(true)}
       emptyLabel="No skills yet."
-      makeDefault={() => ({ name: "", category: "Languages", color: "#3B82F6", badge: "", icon_slug: "", visible: true })}
+      makeDefault={() => ({ name: "", category: categories[0] ?? "Languages", color: "#3B82F6", badge: "", icon_slug: "", visible: true })}
       columns={[
         {
           header: "Skill",
@@ -43,17 +87,17 @@ function SkillsAdmin() {
           <div><AdminLabel>Name</AdminLabel><AdminInput value={v.name ?? ""} onChange={(e) => onChange({ name: e.target.value })} /></div>
           <div>
             <AdminLabel>Category</AdminLabel>
-            <select
-              value={v.category ?? "Languages"}
-              onChange={(e) => onChange({ category: e.target.value })}
-              className="w-full rounded-lg bg-elevated border border-border text-foreground px-3 py-2 text-sm"
-            >
-              <option>Languages</option>
-              <option>Frontend</option>
-              <option>Backend</option>
-              <option>Tools &amp; Cloud</option>
-              <option>Databases</option>
-            </select>
+            <CategoryCombobox
+              value={v.category ?? ""}
+              options={categories}
+              onChange={(name) => {
+                onCategoryChange(name);
+                onChange({ category: name });
+              }}
+            />
+            <p className="mt-1 text-xs text-text-muted">
+              Pick an existing category or type a new one to create it.
+            </p>
           </div>
           <div>
             <AdminLabel>Icon slug (Simple Icons)</AdminLabel>
@@ -79,6 +123,7 @@ function SkillsAdmin() {
         </div>
       )}
     />
+    </>
   );
 }
 

@@ -3,6 +3,7 @@ import {
   fetchSiteProfile,
   fetchProjects,
   fetchSkills,
+  fetchSkillCategories,
   fetchExperience,
   fetchEducation,
   fetchCertifications,
@@ -21,6 +22,8 @@ export const useProjects = () =>
   useQuery({ queryKey: qk.projects, queryFn: () => fetchProjects(false) });
 export const useSkills = () =>
   useQuery({ queryKey: qk.skills, queryFn: () => fetchSkills(false) });
+export const useSkillCategories = () =>
+  useQuery({ queryKey: qk.skillCategories, queryFn: () => fetchSkillCategories(false) });
 export const useExperienceQ = () =>
   useQuery({ queryKey: qk.experience, queryFn: () => fetchExperience(false) });
 export const useEducationQ = () =>

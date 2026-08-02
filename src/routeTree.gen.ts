@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminSkillsRouteImport } from './routes/_authenticated/admin.skills'
+import { Route as AuthenticatedAdminSkillCategoriesRouteImport } from './routes/_authenticated/admin.skill-categories'
 import { Route as AuthenticatedAdminSiteProfileRouteImport } from './routes/_authenticated/admin.site-profile'
 import { Route as AuthenticatedAdminProjectsRouteImport } from './routes/_authenticated/admin.projects'
 import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin.messages'
@@ -52,6 +53,12 @@ const AuthenticatedAdminSkillsRoute =
   AuthenticatedAdminSkillsRouteImport.update({
     id: '/skills',
     path: '/skills',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSkillCategoriesRoute =
+  AuthenticatedAdminSkillCategoriesRouteImport.update({
+    id: '/skill-categories',
+    path: '/skill-categories',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminSiteProfileRoute =
@@ -114,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/admin/site-profile': typeof AuthenticatedAdminSiteProfileRoute
+  '/admin/skill-categories': typeof AuthenticatedAdminSkillCategoriesRoute
   '/admin/skills': typeof AuthenticatedAdminSkillsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -128,6 +136,7 @@ export interface FileRoutesByTo {
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/admin/site-profile': typeof AuthenticatedAdminSiteProfileRoute
+  '/admin/skill-categories': typeof AuthenticatedAdminSkillCategoriesRoute
   '/admin/skills': typeof AuthenticatedAdminSkillsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -145,6 +154,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/_authenticated/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/_authenticated/admin/site-profile': typeof AuthenticatedAdminSiteProfileRoute
+  '/_authenticated/admin/skill-categories': typeof AuthenticatedAdminSkillCategoriesRoute
   '/_authenticated/admin/skills': typeof AuthenticatedAdminSkillsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/admin/messages'
     | '/admin/projects'
     | '/admin/site-profile'
+    | '/admin/skill-categories'
     | '/admin/skills'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/admin/messages'
     | '/admin/projects'
     | '/admin/site-profile'
+    | '/admin/skill-categories'
     | '/admin/skills'
     | '/admin'
   id:
@@ -192,6 +204,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/messages'
     | '/_authenticated/admin/projects'
     | '/_authenticated/admin/site-profile'
+    | '/_authenticated/admin/skill-categories'
     | '/_authenticated/admin/skills'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -244,6 +257,13 @@ declare module '@tanstack/react-router' {
       path: '/skills'
       fullPath: '/admin/skills'
       preLoaderRoute: typeof AuthenticatedAdminSkillsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/skill-categories': {
+      id: '/_authenticated/admin/skill-categories'
+      path: '/skill-categories'
+      fullPath: '/admin/skill-categories'
+      preLoaderRoute: typeof AuthenticatedAdminSkillCategoriesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/site-profile': {
@@ -314,6 +334,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminMessagesRoute: typeof AuthenticatedAdminMessagesRoute
   AuthenticatedAdminProjectsRoute: typeof AuthenticatedAdminProjectsRoute
   AuthenticatedAdminSiteProfileRoute: typeof AuthenticatedAdminSiteProfileRoute
+  AuthenticatedAdminSkillCategoriesRoute: typeof AuthenticatedAdminSkillCategoriesRoute
   AuthenticatedAdminSkillsRoute: typeof AuthenticatedAdminSkillsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
@@ -327,6 +348,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminMessagesRoute: AuthenticatedAdminMessagesRoute,
   AuthenticatedAdminProjectsRoute: AuthenticatedAdminProjectsRoute,
   AuthenticatedAdminSiteProfileRoute: AuthenticatedAdminSiteProfileRoute,
+  AuthenticatedAdminSkillCategoriesRoute:
+    AuthenticatedAdminSkillCategoriesRoute,
   AuthenticatedAdminSkillsRoute: AuthenticatedAdminSkillsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }

@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { skillGroups } from "@/data/portfolio";
-import { useSkills } from "@/hooks/use-portfolio";
-import type { Skill } from "@/lib/cms";
+import { useSkills, useSkillCategories } from "@/hooks/use-portfolio";
+import type { Skill, SkillCategory } from "@/lib/cms";
 import { skillIconUrl, slugForSkill } from "@/lib/skill-icons";
 import { Reveal, Section, SectionEyebrow, staggerContainer, staggerItem } from "./_shared";
 
 type SkillItem = { name: string; badge: string; color: string; slug: string | null };
 type Group = { title: string; skills: SkillItem[] };
 
-function groupSkills(rows: Skill[]): Group[] {
+function groupSkills(rows: Skill[], categories: SkillCategory[]): Group[] {
   const map = new Map<string, Group>();
+  const ordered = [...categories].sort((a, b) => a.display_order - b.display_order);
+  const allowed = categories.length ? new Set(ordered.map((c) => c.name)) : null;
+  for (const c of ordered) map.set(c.name, { title: c.name, skills: [] });
   for (const r of rows) {
+    if (allowed && !allowed.has(r.category)) continue;
     if (!map.has(r.category)) map.set(r.category, { title: r.category, skills: [] });
     map.get(r.category)!.skills.push({
       name: r.name,
@@ -20,7 +24,7 @@ function groupSkills(rows: Skill[]): Group[] {
       slug: slugForSkill(r.name, r.icon_slug),
     });
   }
-  return Array.from(map.values());
+  return Array.from(map.values()).filter((g) => g.skills.length > 0);
 }
 
 function fallbackGroups(): Group[] {
@@ -63,7 +67,9 @@ function SkillLogo({ skill }: { skill: SkillItem }) {
 
 export function Skills() {
   const { data } = useSkills();
-  const groups: Group[] = data && data.length ? groupSkills(data) : fallbackGroups();
+  const { data: categories } = useSkillCategories();
+  const groups: Group[] =
+    data && data.length ? groupSkills(data, categories ?? []) : fallbackGroups();
 
   return (
     <Section id="skills" className="bg-surface/60">
@@ -105,9 +111,6 @@ export function Skills() {
                   <SkillLogo skill={skill} />
                   <div className="min-w-0">
                     <div className="truncate font-semibold text-foreground">{skill.name}</div>
-                    <div className="mt-0.5 text-[11px] font-mono uppercase tracking-wider text-text-muted">
-                      {group.title}
-                    </div>
                   </div>
                 </motion.div>
               ))}

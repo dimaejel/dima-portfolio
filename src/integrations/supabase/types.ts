@@ -167,6 +167,24 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_rate_limits: {
+        Row: {
+          attempts: number
+          visitor_key: string
+          window_started_at: string
+        }
+        Insert: {
+          attempts?: number
+          visitor_key: string
+          window_started_at?: string
+        }
+        Update: {
+          attempts?: number
+          visitor_key?: string
+          window_started_at?: string
+        }
+        Relationships: []
+      }
       education: {
         Row: {
           courses: string[]
@@ -511,6 +529,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_contact_submission: { Args: { p_key: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

@@ -9,34 +9,34 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
-import { Route as AuthenticatedAdminSkillsRouteImport } from './routes/_authenticated/admin.skills'
-import { Route as AuthenticatedAdminSkillCategoriesRouteImport } from './routes/_authenticated/admin.skill-categories'
-import { Route as AuthenticatedAdminSiteProfileRouteImport } from './routes/_authenticated/admin.site-profile'
-import { Route as AuthenticatedAdminProjectsRouteImport } from './routes/_authenticated/admin.projects'
-import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin.messages'
-import { Route as AuthenticatedAdminExperienceRouteImport } from './routes/_authenticated/admin.experience'
-import { Route as AuthenticatedAdminEducationRouteImport } from './routes/_authenticated/admin.education'
-import { Route as AuthenticatedAdminCertificationsRouteImport } from './routes/_authenticated/admin.certifications'
-import { Route as AuthenticatedAdminAboutCodeCardRouteImport } from './routes/_authenticated/admin.about-code-card'
 import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
+import { Route as AuthenticatedAdminAboutCodeCardRouteImport } from './routes/_authenticated/admin.about-code-card'
+import { Route as AuthenticatedAdminCertificationsRouteImport } from './routes/_authenticated/admin.certifications'
+import { Route as AuthenticatedAdminEducationRouteImport } from './routes/_authenticated/admin.education'
+import { Route as AuthenticatedAdminExperienceRouteImport } from './routes/_authenticated/admin.experience'
+import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin.messages'
+import { Route as AuthenticatedAdminProjectsRouteImport } from './routes/_authenticated/admin.projects'
+import { Route as AuthenticatedAdminSiteProfileRouteImport } from './routes/_authenticated/admin.site-profile'
+import { Route as AuthenticatedAdminSkillCategoriesRouteImport } from './routes/_authenticated/admin.skill-categories'
+import { Route as AuthenticatedAdminSkillsRouteImport } from './routes/_authenticated/admin.skills'
 
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -49,46 +49,15 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
-const AuthenticatedAdminSkillsRoute =
-  AuthenticatedAdminSkillsRouteImport.update({
-    id: '/skills',
-    path: '/skills',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminSkillCategoriesRoute =
-  AuthenticatedAdminSkillCategoriesRouteImport.update({
-    id: '/skill-categories',
-    path: '/skill-categories',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminSiteProfileRoute =
-  AuthenticatedAdminSiteProfileRouteImport.update({
-    id: '/site-profile',
-    path: '/site-profile',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminProjectsRoute =
-  AuthenticatedAdminProjectsRouteImport.update({
-    id: '/projects',
-    path: '/projects',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminMessagesRoute =
-  AuthenticatedAdminMessagesRouteImport.update({
-    id: '/messages',
-    path: '/messages',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminExperienceRoute =
-  AuthenticatedAdminExperienceRouteImport.update({
-    id: '/experience',
-    path: '/experience',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminEducationRoute =
-  AuthenticatedAdminEducationRouteImport.update({
-    id: '/education',
-    path: '/education',
+const AuthenticatedAdminAboutRoute = AuthenticatedAdminAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminAboutCodeCardRoute =
+  AuthenticatedAdminAboutCodeCardRouteImport.update({
+    id: '/about-code-card',
+    path: '/about-code-card',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminCertificationsRoute =
@@ -97,17 +66,48 @@ const AuthenticatedAdminCertificationsRoute =
     path: '/certifications',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const AuthenticatedAdminAboutCodeCardRoute =
-  AuthenticatedAdminAboutCodeCardRouteImport.update({
-    id: '/about-code-card',
-    path: '/about-code-card',
+const AuthenticatedAdminEducationRoute =
+  AuthenticatedAdminEducationRouteImport.update({
+    id: '/education',
+    path: '/education',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const AuthenticatedAdminAboutRoute = AuthenticatedAdminAboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => AuthenticatedAdminRoute,
-} as any)
+const AuthenticatedAdminExperienceRoute =
+  AuthenticatedAdminExperienceRouteImport.update({
+    id: '/experience',
+    path: '/experience',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminMessagesRoute =
+  AuthenticatedAdminMessagesRouteImport.update({
+    id: '/messages',
+    path: '/messages',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminProjectsRoute =
+  AuthenticatedAdminProjectsRouteImport.update({
+    id: '/projects',
+    path: '/projects',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSiteProfileRoute =
+  AuthenticatedAdminSiteProfileRouteImport.update({
+    id: '/site-profile',
+    path: '/site-profile',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSkillCategoriesRoute =
+  AuthenticatedAdminSkillCategoriesRouteImport.update({
+    id: '/skill-categories',
+    path: '/skill-categories',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSkillsRoute =
+  AuthenticatedAdminSkillsRouteImport.update({
+    id: '/skills',
+    path: '/skills',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -217,11 +217,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -231,11 +231,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -252,60 +252,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/_authenticated/admin/skills': {
-      id: '/_authenticated/admin/skills'
-      path: '/skills'
-      fullPath: '/admin/skills'
-      preLoaderRoute: typeof AuthenticatedAdminSkillsRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/skill-categories': {
-      id: '/_authenticated/admin/skill-categories'
-      path: '/skill-categories'
-      fullPath: '/admin/skill-categories'
-      preLoaderRoute: typeof AuthenticatedAdminSkillCategoriesRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/site-profile': {
-      id: '/_authenticated/admin/site-profile'
-      path: '/site-profile'
-      fullPath: '/admin/site-profile'
-      preLoaderRoute: typeof AuthenticatedAdminSiteProfileRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/projects': {
-      id: '/_authenticated/admin/projects'
-      path: '/projects'
-      fullPath: '/admin/projects'
-      preLoaderRoute: typeof AuthenticatedAdminProjectsRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/messages': {
-      id: '/_authenticated/admin/messages'
-      path: '/messages'
-      fullPath: '/admin/messages'
-      preLoaderRoute: typeof AuthenticatedAdminMessagesRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/experience': {
-      id: '/_authenticated/admin/experience'
-      path: '/experience'
-      fullPath: '/admin/experience'
-      preLoaderRoute: typeof AuthenticatedAdminExperienceRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/education': {
-      id: '/_authenticated/admin/education'
-      path: '/education'
-      fullPath: '/admin/education'
-      preLoaderRoute: typeof AuthenticatedAdminEducationRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/certifications': {
-      id: '/_authenticated/admin/certifications'
-      path: '/certifications'
-      fullPath: '/admin/certifications'
-      preLoaderRoute: typeof AuthenticatedAdminCertificationsRouteImport
+    '/_authenticated/admin/about': {
+      id: '/_authenticated/admin/about'
+      path: '/about'
+      fullPath: '/admin/about'
+      preLoaderRoute: typeof AuthenticatedAdminAboutRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/about-code-card': {
@@ -315,11 +266,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAboutCodeCardRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/_authenticated/admin/about': {
-      id: '/_authenticated/admin/about'
-      path: '/about'
-      fullPath: '/admin/about'
-      preLoaderRoute: typeof AuthenticatedAdminAboutRouteImport
+    '/_authenticated/admin/certifications': {
+      id: '/_authenticated/admin/certifications'
+      path: '/certifications'
+      fullPath: '/admin/certifications'
+      preLoaderRoute: typeof AuthenticatedAdminCertificationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/education': {
+      id: '/_authenticated/admin/education'
+      path: '/education'
+      fullPath: '/admin/education'
+      preLoaderRoute: typeof AuthenticatedAdminEducationRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/experience': {
+      id: '/_authenticated/admin/experience'
+      path: '/experience'
+      fullPath: '/admin/experience'
+      preLoaderRoute: typeof AuthenticatedAdminExperienceRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/messages': {
+      id: '/_authenticated/admin/messages'
+      path: '/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AuthenticatedAdminMessagesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/projects': {
+      id: '/_authenticated/admin/projects'
+      path: '/projects'
+      fullPath: '/admin/projects'
+      preLoaderRoute: typeof AuthenticatedAdminProjectsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/site-profile': {
+      id: '/_authenticated/admin/site-profile'
+      path: '/site-profile'
+      fullPath: '/admin/site-profile'
+      preLoaderRoute: typeof AuthenticatedAdminSiteProfileRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/skill-categories': {
+      id: '/_authenticated/admin/skill-categories'
+      path: '/skill-categories'
+      fullPath: '/admin/skill-categories'
+      preLoaderRoute: typeof AuthenticatedAdminSkillCategoriesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/skills': {
+      id: '/_authenticated/admin/skills'
+      path: '/skills'
+      fullPath: '/admin/skills'
+      preLoaderRoute: typeof AuthenticatedAdminSkillsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
   }

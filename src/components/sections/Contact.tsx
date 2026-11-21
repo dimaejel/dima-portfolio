@@ -20,6 +20,7 @@ export function Contact() {
   const linkedinHandle = profile?.linkedin_handle || personalInfo.linkedin;
   const location = profile?.location || personalInfo.location;
   const [sent, setSent] = useState(false);
+  const [delivered, setDelivered] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const submitting = useRef(false);
   const saveContact = useServerFn(submitContact);
@@ -42,6 +43,7 @@ export function Contact() {
         return;
       }
       setSent(true);
+      setDelivered(result.delivered === true);
       reset();
     } catch {
       setSubmitError("Your message could not be saved. Please check your connection and try again.");
@@ -188,7 +190,7 @@ export function Contact() {
 
             {sent && (
               <p role="status" className="text-sm text-success text-center">
-                Thanks! Your message has been received.
+                {delivered ? "Your message has been sent successfully! I'll get back to you soon." : "Thanks! Your message has been received."}
               </p>
             )}
             {submitError && <p role="alert" className="text-sm text-destructive text-center">{submitError}</p>}

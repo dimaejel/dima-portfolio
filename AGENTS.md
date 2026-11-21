@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Contact submissions use a public TanStack server function with shared Zod validation and insert-only behavior; this keeps validation and privileged storage out of the browser.
+- Never report contact email delivery before a connected email provider confirms the send; stored messages and delivered emails are separate outcomes.

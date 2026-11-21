@@ -1,20 +1,15 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useServerFn } from "@tanstack/react-start";
+import { contactSchema, type ContactInput } from "@/lib/contact-schema";
+import { submitContact } from "@/lib/contact.functions";
 import { Github, Linkedin, Loader2, Mail, MapPin, Send } from "lucide-react";
 import { personalInfo } from "@/data/portfolio";
 import { useSiteProfile } from "@/hooks/use-portfolio";
 import { Reveal, Section, SectionEyebrow } from "./_shared";
 
-const schema = z.object({
-  name: z.string().min(2, "Please enter your full name"),
-  email: z.string().email("Enter a valid email address"),
-  subject: z.string().min(3, "Add a brief subject"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-});
-
-type FormData = z.infer<typeof schema>;
+type FormData = ContactInput;
 
 export function Contact() {
   const profile = useSiteProfile();
@@ -25,24 +20,34 @@ export function Contact() {
   const linkedinHandle = profile?.linkedin_handle || personalInfo.linkedin;
   const location = profile?.location || personalInfo.location;
   const [sent, setSent] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const submitting = useRef(false);
+  const saveContact = useServerFn(submitContact);
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  } = useForm<FormData>({ resolver: zodResolver(contactSchema), defaultValues: { website: "" } });
 
   const onSubmit = async (data: FormData) => {
-    const { supabase } = await import("@/integrations/supabase/client");
-    const { error } = await supabase.from("contact_messages").insert(data);
-    if (error) {
-      const { toast } = await import("sonner");
-      toast.error(error.message);
-      return;
+    if (submitting.current) return;
+    submitting.current = true;
+    setSent(false);
+    setSubmitError(null);
+    try {
+      const result = await saveContact({ data });
+      if (!result.ok) {
+        setSubmitError(result.error || "Your message could not be saved. Please try again.");
+        return;
+      }
+      setSent(true);
+      reset();
+    } catch {
+      setSubmitError("Your message could not be saved. Please check your connection and try again.");
+    } finally {
+      submitting.current = false;
     }
-    setSent(true);
-    reset();
-    setTimeout(() => setSent(false), 4000);
   };
 
   const inputClass =
@@ -93,12 +98,17 @@ export function Contact() {
             className="rounded-2xl border border-border bg-surface p-6 sm:p-8 space-y-4"
             noValidate
           >
+            <div hidden aria-hidden="true">
+              <label htmlFor="contact-website">Website</label>
+              <input id="contact-website" type="text" tabIndex={-1} autoComplete="off" {...register("website")} />
+            </div>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-foreground mb-1.5">
                 Full Name
               </label>
               <input
                 id="name"
+                maxLength={100}
                 type="text"
                 placeholder="Jane Doe"
                 {...register("name")}
@@ -115,6 +125,7 @@ export function Contact() {
               </label>
               <input
                 id="email"
+                maxLength={255}
                 type="email"
                 placeholder="you@company.com"
                 {...register("email")}
@@ -131,6 +142,7 @@ export function Contact() {
               </label>
               <input
                 id="subject"
+                maxLength={200}
                 type="text"
                 placeholder="Opportunity at Acme Corp"
                 {...register("subject")}
@@ -147,6 +159,7 @@ export function Contact() {
               </label>
               <textarea
                 id="message"
+                maxLength={5000}
                 rows={5}
                 placeholder="Tell me a bit about the role and team…"
                 {...register("message")}
@@ -174,10 +187,11 @@ export function Contact() {
             </button>
 
             {sent && (
-              <p className="text-sm text-success text-center">
+              <p role="status" className="text-sm text-success text-center">
                 Thanks! Your message has been received.
               </p>
             )}
+            {submitError && <p role="alert" className="text-sm text-destructive text-center">{submitError}</p>}
           </form>
         </Reveal>
       </div>

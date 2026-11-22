@@ -1,4 +1,7 @@
 # Contact form
+- [ ] Test Resend's permitted test sender to the owner's Gmail and confirm delivery status.
+- [ ] Enable a permitted domain-free notification path, keeping saved messages successful if notification fails.
+- [ ] Verify real form storage plus notification, or report the provider blocker and secure alternative.
 - [x] Preserve the Contact appearance and saved admin inbox messages.
 - [x] Add shared client/server validation, bounded inputs, honeypot, duplicate-submit prevention, and safe errors.
 - [x] Connect Resend; sender setup and email notifications explicitly postponed until the owner buys and verifies a domain.

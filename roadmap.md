@@ -4,4 +4,4 @@
 - [x] Connect Resend; sender setup and email notifications explicitly postponed until the owner buys and verifies a domain.
 - [x] Keep saved-message success working without a sender domain; do not claim email delivery.
 - [x] Add approved custom spam limit: three submissions per visitor every ten minutes; database tests passed.
-- [ ] Verify real form storage end-to-end.
+- [x] Verify real form storage end-to-end: submitted through the public form, confirmed the saved row, and removed only that test entry. Retry preservation and mobile form verified.

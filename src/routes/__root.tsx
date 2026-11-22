@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -36,7 +37,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -80,14 +81,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#0A0F1E" },
-      { title: "Lovable App" },
-      { property: "og:title", content: "Lovable App" },
-      { name: "twitter:title", content: "Lovable App" },
+      { title: "Dima Ejel — Portfolio" },
+      { property: "og:title", content: "Dima Ejel — Portfolio" },
+      { name: "twitter:title", content: "Dima Ejel — Portfolio" },
       { name: "description", content: "A premium, production-ready portfolio website for CS graduates seeking tech roles." },
       { property: "og:description", content: "A premium, production-ready portfolio website for CS graduates seeking tech roles." },
       { name: "twitter:description", content: "A premium, production-ready portfolio website for CS graduates seeking tech roles." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f80be0a8-dafa-4875-beea-d91d5487f633/id-preview-05305f48--93168c8b-1fc6-4cdf-a7ed-6adfac5db70c.lovable.app-1784945999933.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f80be0a8-dafa-4875-beea-d91d5487f633/id-preview-05305f48--93168c8b-1fc6-4cdf-a7ed-6adfac5db70c.lovable.app-1784945999933.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:type", content: "website" },
     ],

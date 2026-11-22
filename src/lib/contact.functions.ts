@@ -1,8 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeader } from "@tanstack/react-start/server";
-import { z } from "zod";
 import { contactSchema } from "./contact-schema";
-import { contactNotification } from "./contact-notification";
+import { deliverContactNotification } from "./contact-delivery";
 
 // Public by design: only a validated contact insert is permitted, never a read.
 export const submitContact = createServerFn({ method: "POST" })
@@ -31,30 +30,14 @@ export const submitContact = createServerFn({ method: "POST" })
         console.error("Contact message save failed", error.code);
         return { ok: false, error: "Your message could not be saved. Please try again shortly." };
       }
-      const from = process.env["RESEND_FROM_EMAIL"];
-      const apiKey = process.env["RESEND_API_KEY"];
-      const gatewayKey = process.env["LOVABLE_API_KEY"];
-      if (!from || !z.string().email().safeParse(from).success || !apiKey || !gatewayKey) {
-        return { ok: true, delivered: false, error: null };
-      }
-      const response = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${gatewayKey}`,
-          "X-Connection-Api-Key": apiKey,
-          "Idempotency-Key": `contact-${id}`,
-        },
-        body: JSON.stringify({ from: `Dima Ejel Portfolio <${from}>`, ...contactNotification(message, submittedAt) }),
+      // Saving is the submission's success boundary. Email outages must never lose a lead
+      // or prompt the visitor to create duplicate submissions.
+      const delivered = await deliverContactNotification(message, submittedAt, id, {
+        from: process.env["RESEND_FROM_EMAIL"],
+        apiKey: process.env["RESEND_API_KEY"],
+        gatewayKey: process.env["LOVABLE_API_KEY"],
       });
-      if (!response.ok) {
-        const providerError = await response.text();
-        console.error(`Resend contact notification failed [${response.status}]: ${providerError}`);
-        return { ok: false, error: "Your message was saved, but email delivery failed. Please try again shortly." };
-      }
-      const sent = z.object({ id: z.string().min(1) }).safeParse(await response.json());
-      if (!sent.success) return { ok: false, error: "Your message was saved, but email delivery could not be confirmed." };
-      return { ok: true, delivered: true, error: null };
+      return { ok: true, delivered, error: null };
     } catch {
       console.error("Contact message service unavailable");
       return { ok: false, error: "Your message could not be saved. Please try again shortly." };

@@ -17,7 +17,16 @@ type Form = SiteProfile & { rolesText: string; interestsText: string; statsText:
 
 function SiteProfilePage() {
   const qc = useQueryClient();
-  const q = useQuery({ queryKey: qk.siteProfile, queryFn: fetchSiteProfile });
+  const q = useQuery({
+    queryKey: [...qk.siteProfile, "admin"],
+    queryFn: async () => {
+      const profile = await fetchSiteProfile();
+      if (!profile) return null;
+      const { data, error } = await supabase.from("site_profile_private").select("phone").eq("id", 1).maybeSingle();
+      if (error) throw error;
+      return { ...profile, phone: data?.phone ?? null };
+    },
+  });
   const [form, setForm] = useState<Form | null>(null);
 
   useEffect(() => {
@@ -47,7 +56,6 @@ function SiteProfilePage() {
         roles: f.rolesText.split(",").map((s) => s.trim()).filter(Boolean),
         bio: f.bio,
         email: f.email,
-        phone: f.phone,
         location: f.location,
         avatar_url: f.avatar_url,
         resume_url: f.resume_url,
@@ -61,6 +69,10 @@ function SiteProfilePage() {
       };
       const { error } = await supabase.from("site_profile").update(payload).eq("id", 1);
       if (error) throw error;
+      const { error: phoneError } = await supabase
+        .from("site_profile_private")
+        .upsert({ id: 1, phone: f.phone || null });
+      if (phoneError) throw phoneError;
     },
     onSuccess: () => {
       toast.success("Profile saved.");

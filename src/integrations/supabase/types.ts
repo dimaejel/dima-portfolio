@@ -437,6 +437,24 @@ export type Database = {
         }
         Relationships: []
       }
+      site_profile_private: {
+        Row: {
+          id: number
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       skill_categories: {
         Row: {
           created_at: string
@@ -537,6 +555,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_public_media: { Args: { _name: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user"

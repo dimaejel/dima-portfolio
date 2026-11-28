@@ -15,6 +15,13 @@
       "when": 1795421358837,
       "tag": "0001_secure_phone_and_media",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795872852848,
+      "tag": "0002_restore_public_portfolio_media",
+      "breakpoints": true
     }
   ]
 }

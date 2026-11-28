@@ -103,8 +103,10 @@ export type Database = {
           created_at: string
           date: string
           display_order: number
+          document_url: string | null
           gradient: string | null
           id: string
+          image_url: string | null
           issuer: string
           link: string | null
           title: string
@@ -115,8 +117,10 @@ export type Database = {
           created_at?: string
           date?: string
           display_order?: number
+          document_url?: string | null
           gradient?: string | null
           id?: string
+          image_url?: string | null
           issuer?: string
           link?: string | null
           title: string
@@ -127,8 +131,10 @@ export type Database = {
           created_at?: string
           date?: string
           display_order?: number
+          document_url?: string | null
           gradient?: string | null
           id?: string
+          image_url?: string | null
           issuer?: string
           link?: string | null
           title?: string
@@ -556,6 +562,7 @@ export type Database = {
         Returns: boolean
       }
       is_public_media: { Args: { _name: string }; Returns: boolean }
+      portfolio_media_path: { Args: { value: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "user"

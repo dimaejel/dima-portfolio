@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
+import { normalizeMediaReference } from "./media-reference";
 
 export type SiteProfile = Tables<"site_profile">;
 export type Project = Tables<"projects">;
@@ -78,41 +79,75 @@ export async function fetchMessages(): Promise<ContactMessage[]> {
 }
 
 export const MEDIA_BUCKET = "site-media";
-const PUBLIC_PREFIX = `/storage/v1/object/public/${MEDIA_BUCKET}/`;
-const SIGN_PREFIX = `/storage/v1/object/sign/${MEDIA_BUCKET}/`;
 
 /** Returns the object path inside the site-media bucket, or null for external URLs. */
 export function storagePath(value?: string | null): string | null {
-  if (!value) return null;
-  for (const prefix of [PUBLIC_PREFIX, SIGN_PREFIX]) {
-    const i = value.indexOf(prefix);
-    if (i >= 0) return decodeURIComponent(value.slice(i + prefix.length).split("?")[0]);
-  }
-  if (/^https?:\/\//i.test(value) || value.startsWith("data:")) return null;
-  return value.replace(/^\/+/, "");
+  const reference = normalizeMediaReference(value);
+  return !reference || /^https:\/\//i.test(reference) ? null : reference;
 }
 
 /** Turns a stored value (bucket path or URL) into a URL usable as an <img>/<a> src. */
 export async function resolveMediaUrl(value?: string | null): Promise<string | null> {
   if (!value) return null;
+  if (value.startsWith("#")) return value;
   const path = storagePath(value);
-  if (!path) return value;
+  if (!path) return normalizeMediaReference(value);
   const { data, error } = await supabase.storage
     .from(MEDIA_BUCKET)
-    .createSignedUrl(path, 60 * 60 * 24 * 7);
-  if (error) return null;
+    .createSignedUrl(path, 60 * 60);
+  if (error) throw error;
   return data?.signedUrl ?? null;
 }
 
 /** Uploads a file and returns its storage path (stored in the DB, resolved at render). */
 export async function uploadMedia(file: File, folder: string): Promise<string> {
   const ext = file.name.split(".").pop() ?? "bin";
-  const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const path = `${folder}/${crypto.randomUUID()}.${ext.replace(/[^a-z0-9]/gi, "") || "bin"}`;
   const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
     upsert: false,
     contentType: file.type || undefined,
   });
   if (error) throw error;
   return path;
+}
+
+/** Save the reference before reporting success; only remove this new file on failure. */
+export async function uploadRecordMedia(file: File, folder: string, record?: {
+  table: "site_profile" | "projects" | "certifications";
+  id: string | number;
+  field: "avatar_url" | "resume_url" | "image_url" | "document_url" | "gallery";
+}): Promise<string | string[]> {
+  const path = await uploadMedia(file, folder);
+  if (!record) return path;
+  try {
+    let value: string | string[] = path;
+    if (record.field === "gallery") {
+      const { data, error } = await supabase.from("projects").select("gallery").eq("id", String(record.id)).single();
+      if (error) throw error;
+      value = [...data.gallery, path];
+    }
+    let error;
+    if (record.table === "site_profile") {
+      if (record.field !== "avatar_url" && record.field !== "resume_url") throw new Error("Invalid profile file field.");
+      const result = await supabase.from("site_profile").update(record.field === "avatar_url" ? { avatar_url: path } : { resume_url: path })
+        .eq("id", Number(record.id)).select("id").single();
+      error = result.error;
+    } else if (record.table === "certifications") {
+      if (record.field !== "image_url" && record.field !== "document_url") throw new Error("Invalid certificate file field.");
+      const result = await supabase.from("certifications").update(record.field === "image_url" ? { image_url: path } : { document_url: path })
+        .eq("id", String(record.id)).select("id").single();
+      error = result.error;
+    } else {
+      if (record.field !== "gallery" && record.field !== "image_url") throw new Error("Invalid project file field.");
+      const result = await supabase.from("projects").update(Array.isArray(value) ? { gallery: value } : { image_url: value })
+        .eq("id", String(record.id)).select("id").single();
+      error = result.error;
+    }
+    if (error) throw error;
+    return value;
+  } catch (error) {
+    await supabase.storage.from(MEDIA_BUCKET).remove([path]);
+    throw error;
+  }
 }
 

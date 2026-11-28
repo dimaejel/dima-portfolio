@@ -6,7 +6,9 @@ export function useMediaUrl(value?: string | null): string | null {
   const q = useQuery({
     queryKey: ["media-url", value],
     enabled: !!value,
-    staleTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 50,
+    refetchInterval: 1000 * 60 * 50,
+    retry: 2,
     queryFn: () => resolveMediaUrl(value),
   });
   return q.data ?? null;

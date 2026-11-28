@@ -1,3 +1,9 @@
+# Portfolio media persistence
+- [x] Reproduce missing public media on the deployed website and identify the permission failure.
+- [x] Separate visitor access from admin permission checks; retain private unused uploads.
+- [ ] Make all media editors persist references before reporting success; add certificate uploads without redesigning cards.
+- [ ] Test storage permissions, new uploads, refresh, sign-out, and fresh desktop/mobile browsers on production.
+
 # Contact form
 - [x] Test Resend's permitted test sender to the owner's Gmail: provider reports delivered.
 - [x] Enable a permitted domain-free notification path, keeping saved messages successful if notification fails.

@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CrudList } from "@/components/admin/CrudList";
 import { AdminInput, AdminTextarea, AdminLabel } from "@/components/admin/PageHeader";
-import { fetchProjects, qk, uploadMedia, type Project } from "@/lib/cms";
+import { fetchProjects, qk, type Project } from "@/lib/cms";
 import { MediaImage } from "@/components/MediaImage";
+import { MediaUpload } from "@/components/admin/MediaUpload";
 
 import { useState } from "react";
-import { Upload } from "lucide-react";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/projects")({
   component: ProjectsAdmin,
@@ -71,30 +70,6 @@ function ProjectForm({ v, onChange }: { v: Partial<Project>; onChange: (p: Parti
     onChange({ gallery: val.split("\n").map((s) => s.trim()).filter(Boolean) });
   };
 
-  const uploadGallery = async (file: File) => {
-    try {
-      const url = await uploadMedia(file, "projects");
-      const next = [...(v.gallery ?? []), url];
-      setGalleryText(next.join("\n"));
-      onChange({ gallery: next });
-      toast.success("Gallery image uploaded.");
-    } catch (e) {
-      toast.error((e as Error).message);
-    }
-  };
-
-
-
-  const upload = async (file: File) => {
-    try {
-      const url = await uploadMedia(file, "projects");
-      onChange({ image_url: url });
-      toast.success("Image uploaded.");
-    } catch (e) {
-      toast.error((e as Error).message);
-    }
-  };
-
   return (
     <div className="grid gap-3">
       <div><AdminLabel>Title</AdminLabel><AdminInput value={v.title ?? ""} onChange={(e) => onChange({ title: e.target.value })} /></div>
@@ -137,10 +112,7 @@ function ProjectForm({ v, onChange }: { v: Partial<Project>; onChange: (p: Parti
         <div className="flex flex-wrap items-center gap-3">
           <MediaImage path={v.image_url} alt="" className="h-14 w-24 rounded object-cover border border-border" />
           <AdminInput value={v.image_url ?? ""} onChange={(e) => onChange({ image_url: e.target.value })} placeholder="projects/…" />
-          <label className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm cursor-pointer hover:border-primary/40">
-            <Upload className="h-4 w-4" /> Upload
-            <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f); e.target.value = ""; }} />
-          </label>
+          <MediaUpload folder="projects" table="projects" recordId={v.id} field="image_url" onSaved={(value) => { if (typeof value === "string") onChange({ image_url: value }); }} />
         </div>
       </div>
       <div>
@@ -152,10 +124,11 @@ function ProjectForm({ v, onChange }: { v: Partial<Project>; onChange: (p: Parti
         </div>
 
         <AdminTextarea rows={3} value={galleryText} onChange={(e) => setGallery(e.target.value)} placeholder="https://…" />
-        <label className="mt-2 inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm cursor-pointer hover:border-primary/40">
-          <Upload className="h-4 w-4" /> Upload gallery image
-          <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadGallery(f); e.target.value = ""; }} />
-        </label>
+        <MediaUpload folder="projects" table="projects" recordId={v.id} field="gallery" label="Upload gallery image" onSaved={(value) => {
+          const next = typeof value === "string" ? [...(v.gallery ?? []), value] : value;
+          setGalleryText(next.join("\n"));
+          onChange({ gallery: next });
+        }} />
       </div>
       <div className="flex flex-wrap gap-4">
         <label className="flex items-center gap-2 text-sm">

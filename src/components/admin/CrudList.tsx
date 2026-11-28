@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { PageHeader, AdminButton, EmptyState } from "./PageHeader";
 import { ActionButton, ConfirmDialog, StatusBadge } from "./Actions";
+import { MediaUploadActivity } from "./MediaUpload";
+import { normalizeRecordMedia } from "@/lib/media-reference";
 
 export type CrudRow = {
   id: string;
@@ -57,6 +59,7 @@ export function CrudList<T extends CrudRow>({
   const q = useQuery({ queryKey, queryFn: fetchAll });
   const [editing, setEditing] = useState<Partial<T> | null>(null);
   const [pendingDelete, setPendingDelete] = useState<T | null>(null);
+  const [activeUploads, setActiveUploads] = useState(0);
 
 
   const invalidate = () => {
@@ -68,13 +71,13 @@ export function CrudList<T extends CrudRow>({
     mutationFn: async (row: Partial<T>) => {
       if (row.id) {
         const { id, ...rest } = row;
-        const { error } = await supabase.from(table as never).update(rest as never).eq("id", id);
+        const { error } = await supabase.from(table as never).update(normalizeRecordMedia(table, rest) as never).eq("id", id).select("id").single();
         if (error) throw error;
       } else {
         const nextOrder = (q.data ?? []).reduce((m, r) => Math.max(m, r.display_order ?? 0), 0) + 10;
         const { error } = await supabase
           .from(table as never)
-          .insert({ ...(row as object), display_order: row.display_order ?? nextOrder } as never);
+          .insert({ ...normalizeRecordMedia(table, row), display_order: row.display_order ?? nextOrder } as never).select("id").single();
         if (error) throw error;
       }
     },
@@ -248,12 +251,14 @@ export function CrudList<T extends CrudRow>({
 
       {editing && (
         <Modal onClose={() => setEditing(null)} title={editing.id ? "Edit" : "New"}>
+          <MediaUploadActivity.Provider value={(delta) => setActiveUploads((n) => n + delta)}>
           <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-1">
             {renderForm(editing, (patch) => setEditing((e) => ({ ...(e ?? {}), ...patch })))}
           </div>
+          </MediaUploadActivity.Provider>
           <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-border">
             <AdminButton variant="ghost" onClick={() => setEditing(null)}>Cancel</AdminButton>
-            <AdminButton onClick={() => save.mutate(editing)} disabled={save.isPending}>
+            <AdminButton onClick={() => save.mutate(editing)} disabled={save.isPending || activeUploads > 0}>
               {save.isPending ? "Saving…" : "Save"}
             </AdminButton>
           </div>

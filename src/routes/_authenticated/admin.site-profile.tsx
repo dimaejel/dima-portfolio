@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchSiteProfile, qk, uploadMedia, type SiteProfile } from "@/lib/cms";
+import { fetchSiteProfile, qk, uploadRecordMedia, type SiteProfile } from "@/lib/cms";
+import { normalizeMediaReference } from "@/lib/media-reference";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, Upload } from "lucide-react";
@@ -28,6 +29,7 @@ function SiteProfilePage() {
     },
   });
   const [form, setForm] = useState<Form | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (q.data) {
@@ -57,8 +59,8 @@ function SiteProfilePage() {
         bio: f.bio,
         email: f.email,
         location: f.location,
-        avatar_url: f.avatar_url,
-        resume_url: f.resume_url,
+        avatar_url: normalizeMediaReference(f.avatar_url),
+        resume_url: normalizeMediaReference(f.resume_url),
         github_url: f.github_url,
         linkedin_url: f.linkedin_url,
         github_handle: f.github_handle,
@@ -67,7 +69,7 @@ function SiteProfilePage() {
         stats,
         interests: f.interestsText.split(",").map((s) => s.trim()).filter(Boolean),
       };
-      const { error } = await supabase.from("site_profile").update(payload).eq("id", 1);
+      const { error } = await supabase.from("site_profile").update(payload).eq("id", 1).select("id").single();
       if (error) throw error;
       const { error: phoneError } = await supabase
         .from("site_profile_private")
@@ -82,12 +84,18 @@ function SiteProfilePage() {
   });
 
   const upload = async (kind: "avatar" | "resume", file: File) => {
+    setUploading(true);
     try {
-      const url = await uploadMedia(file, kind);
+      const field = kind === "avatar" ? "avatar_url" : "resume_url";
+      const url = await uploadRecordMedia(file, kind, { table: "site_profile", id: 1, field });
+      if (typeof url !== "string") throw new Error("Invalid uploaded file reference.");
       setForm((f) => (f ? { ...f, [kind === "avatar" ? "avatar_url" : "resume_url"]: url } : f));
-      toast.success("Uploaded.");
+      await qc.invalidateQueries({ queryKey: qk.siteProfile, exact: true });
+      toast.success("File uploaded and saved.");
     } catch (e) {
       toast.error((e as Error).message);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -101,7 +109,7 @@ function SiteProfilePage() {
         title="Site Profile"
         description="Edit your hero, about, and contact details."
         action={
-          <AdminButton onClick={() => save.mutate(form)} disabled={save.isPending}>
+          <AdminButton onClick={() => save.mutate(form)} disabled={save.isPending || uploading}>
             {save.isPending && <Loader2 className="h-4 w-4 animate-spin" />} Save changes
           </AdminButton>
         }
@@ -138,14 +146,14 @@ function SiteProfilePage() {
           <div className="flex flex-wrap items-center gap-3">
             <MediaImage path={form.avatar_url} alt="" className="h-16 w-16 rounded-full object-cover border border-border" />
             <AdminInput value={form.avatar_url ?? ""} onChange={(e) => upd("avatar_url", e.target.value)} placeholder="avatar/…" />
-            <FileButton onFile={(f) => upload("avatar", f)} />
+            <FileButton disabled={uploading || save.isPending} onFile={(f) => upload("avatar", f)} />
           </div>
         </Field>
 
         <Field label="Resume / CV" wide>
           <div className="flex flex-wrap items-center gap-3">
             <AdminInput value={form.resume_url ?? ""} onChange={(e) => upd("resume_url", e.target.value)} placeholder="resume/…" />
-            <FileButton onFile={(f) => upload("resume", f)} accept=".pdf,.doc,.docx" />
+            <FileButton disabled={uploading || save.isPending} onFile={(f) => upload("resume", f)} accept=".pdf" />
             <ResumePreview path={form.resume_url} />
           </div>
         </Field>
@@ -164,13 +172,14 @@ function Field({ label, children, wide }: { label: string; children: React.React
   );
 }
 
-function FileButton({ onFile, accept = "image/*" }: { onFile: (f: File) => void; accept?: string }) {
+function FileButton({ onFile, accept = "image/*", disabled = false }: { onFile: (f: File) => void; accept?: string; disabled?: boolean }) {
   return (
     <label className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm cursor-pointer hover:border-primary/40">
       <Upload className="h-4 w-4" /> Upload
       <input
         type="file"
         accept={accept}
+        disabled={disabled}
         className="hidden"
         onChange={(e) => {
           const f = e.target.files?.[0];
